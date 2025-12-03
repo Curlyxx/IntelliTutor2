@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Manrope',sans-serif;
+}
+
+body{
+    background:#0b1736;
+    min-height:100vh;
+}
+
+/* ===============================
+   CONTENEDOR PRINCIPAL
+=============================== */
+.register-container{
+    display:flex;
+    height:100vh;
+    width:100%;
+}
+
+/* ===============================
+   LADO IZQUIERDO
+=============================== */
+.register-left{
+    position:relative;
+    flex:1.2;
+    background:url('/static/login/img/fondo_login.webp') center/cover no-repeat;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    overflow:hidden;
+}
+
+.register-left::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg, rgba(11,23,54,.92), rgba(0,229,255,.25));
+    z-index:1;
+}
+
+/* SEPARADOR CENTRAL LUMINOSO */
+.register-left::after{
+    content:'';
+    position:absolute;
+    top:0;
+    right:-1px;
+    width:5px;
+    height:100%;
+    background: linear-gradient(to bottom,#00e5ff,#d3c22b,#00e5ff);
+    box-shadow:
+        0 0 15px rgba(0,229,255,.8),
+        0 0 40px rgba(255,204,51,.6);
+    z-index:3;
+}
+
+.branding-content{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:40px;
+}
+
+/* ===============================
+   LOGO
+=============================== */
+.logo-container{
+    position:relative;
+    display:inline-block;
+    margin-bottom:20px;
+}
+
+.logo-glow{
+    position:absolute;
+    inset:-15px;
+    background:rgba(211,194,43,.45);
+    filter:blur(25px);
+    border-radius:50%;
+    z-index:-1;
+}
+
+.unam-logo{
+    width:110px;
+}
+
+/* ===============================
+   TEXTOS
+=============================== */
+.brand-title{
+    font-size:42px;
+    font-weight:800;
+}
+
+.brand-subtitle{
+    margin-top:6px;
+    opacity:.9;
+}
+
+.brand-location{
+    margin-top:15px;
+    font-size:14px;
+    opacity:.8;
+}
+
+/* ===============================
+   BENEFICIOS
+=============================== */
+.benefits-list{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.benefit-item{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(6px);
+    border-radius:12px;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    transition:.3s;
+}
+
+.benefit-item:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.15);
+}
+
+.benefit-item i{
+    font-size:22px;
+    color:#d3c22b;
+    margin-bottom:6px;
+}
+
+.benefit-item span{
+    font-size:12px;
+    opacity:.85;
+}
+
+/* ===============================
+   LADO DERECHO
+=============================== */
+.register-right{
+    position:relative;
+    flex:1;
+    background: radial-gradient(circle at top left, #ffffff, #e9eef6);
+    color:#0b1736;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+.register-right::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at bottom right, rgba(255,204,51,.12), transparent 60%),
+        radial-gradient(circle at top left, rgba(0,59,122,.18), transparent 55%);
+    pointer-events:none;
+}
+
+/* ===============================
+   WRAPPER
+=============================== */
+.register-form-wrapper{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:480px;
+    padding:45px;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+
+/* ===============================
+   BOTÓN VOLVER
+=============================== */
+.back-button{
+    color:#003b7a;
+    text-decoration:none;
+    display:flex;
+    gap:8px;
+    align-items:center;
+    font-weight:600;
+    margin-bottom:20px;
+}
+
+.back-button i{
+    transition:.3s;
+}
+
+.back-button:hover i{
+    transform:translateX(-5px);
+}
+
+/* ===============================
+   TARJETA FORMULARIO
+=============================== */
+.form-container{
+    background: rgba(255,255,255,.85);
+    border-radius:18px;
+    padding:35px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:
+        0 12px 35px rgba(11,23,54,.15),
+        inset 0 1px 0 rgba(255,255,255,.6);
+    border:1px solid rgba(11,23,54,.08);
+}
+
+/* ===============================
+   TITULOS
+=============================== */
+.form-title{
+    font-size:26px;
+    font-weight:700;
+    color:#003b7a;
+}
+
+.form-subtitle{
+    font-size:14px;
+    opacity:.7;
+    margin-top:6px;
+    margin-bottom:20px;
+}
+
+/* ===============================
+   FORM FILAS
+=============================== */
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+/* ===============================
+   INPUTS
+=============================== */
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-label{
+    font-size:13px;
+    margin-bottom:5px;
+    display:block;
+}
+
+.input-group{
+    position:relative;
+}
+
+.input-icon{
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#003b7a;
+    opacity:.75;
+}
+
+.form-control{
+    width:100%;
+    background:#f4f6fa;
+    border:1px solid #dce1eb;
+    padding:12px 12px 12px 35px;
+    border-radius:10px;
+    color:#0b1736;
+    transition:.2s;
+}
+
+.form-control:focus{
+    outline:none;
+    border-color:#003b7a;
+    box-shadow:0 0 0 2px rgba(0,59,122,.25);
+}
+
+/* ===============================
+   PASSWORD
+=============================== */
+.toggle-password{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    background:none;
+    border:none;
+    color:#003b7a;
+    opacity:.8;
+    cursor:pointer;
+}
+
+/* ===============================
+   CHECKBOX
+=============================== */
+.terms-group{
+    margin:10px 0;
+    font-size:13px;
+}
+
+/* ===============================
+   BOTONES
+=============================== */
+.btn-primary{
+    margin-top:20px;
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    color:white;
+    cursor:pointer;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(135deg,#0b1736,#003b7a);
+    box-shadow:0 5px 15px rgba(0,0,0,.18);
+}
+
+.btn-primary:hover{
+    background:linear-gradient(135deg,#003b7a,#0b1736);
+}
+
+.btn-secondary{
+    margin-top:12px;
+    display:block;
+    text-align:center;
+    padding:10px;
+    border-radius:10px;
+    background:transparent;
+    color:#003b7a;
+    font-weight:600;
+    text-decoration:none;
+    border:2px solid rgba(0,59,122,.35);
+    transition:.25s;
+}
+
+.btn-secondary:hover{
+    background:rgba(0,59,122,.05);
+}
+
+/* ===============================
+   ALERTAS
+=============================== */
+.alert{
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:6px;
+    font-size:13px;
+}
+
+.alert-error{
+    background:rgba(255,0,0,.15);
+    color:#ff7b7b;
+}
+
+.alert-success{
+    background:rgba(0,255,120,.15);
+    color:#6affb2;
+}
+
+/* ===============================
+   RESPONSIVE
+=============================== */
+@media(max-width:900px){
+    .register-container{
+        flex-direction:column;
+    }
+
+    .register-left{
+        height:40vh;
+    }
+
+    .benefits-list{
+        grid-template-columns:1fr;
+    }
+}

@@ -1,0 +1,587 @@
+/* Portal del Alumno - IntelliTutor UNAM */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Messages - Mejorado para mayor visibilidad */
+.messages-container {
+    position: fixed;
+    top: 90px; /* Más cerca del borde superior */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: auto;
+    max-width: 90%;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.message {
+    padding: 1rem 1.5rem; /* Más padding para mayor tamaño */
+    border-radius: 10px; /* Bordes más redondeados */
+    font-weight: 700; /* Texto más grueso */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 1;
+    transform: translateY(0);
+    min-width: 250px; /* Más ancho */
+    max-width: 500px;
+    text-align: center;
+    font-size: 1rem; /* Texto más grande */
+    backdrop-filter: blur(8px); /* Efecto de vidrio */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); /* Sombra más fuerte */
+    border: 2px solid; /* Borde más grueso */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    line-height: 1.4;
+}
+
+.message.hide {
+    opacity: 0 !important;
+    transform: translateY(-10px) !important; /* Animación más notoria */
+}
+
+/* Éxito - Verde más vibrante y opaco */
+.message.success {
+    background: rgba(34, 139, 34, 0.95); /* Menos transparente */
+    color: white; /* Texto blanco para mejor contraste */
+    border-color: rgba(60, 200, 60, 0.6); /* Borde más visible */
+    box-shadow: 0 8px 25px rgba(34, 139, 34, 0.3); /* Sombra verde */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Sombra en texto */
+}
+
+/* Error - Rojo más intenso */
+.message.error {
+    background: rgba(183, 28, 28, 0.95);
+    color: white;
+    border-color: rgba(255, 70, 70, 0.6);
+    box-shadow: 0 8px 25px rgba(183, 28, 28, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Info - Azul más brillante */
+.message.info {
+    background: rgba(11, 95, 215, 0.95);
+    color: white;
+    border-color: rgba(70, 130, 255, 0.6);
+    box-shadow: 0 8px 25px rgba(11, 95, 215, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Agrega también warning si no lo tienes */
+.message.warning {
+    background: rgba(255, 152, 0, 0.95);
+    color: white;
+    border-color: rgba(255, 193, 7, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Animación de entrada más notoria */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message {
+    animation: slideInDown 0.4s ease-out;
+}
+
+/* Para mayor visibilidad, agrega un efecto de brillo */
+.message::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(0, 0, 0, 0.05) 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Hacer el texto más legible */
+.message {
+    letter-spacing: 0.5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Opcional: Agregar ícono según el tipo de mensaje */
+.message::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: brightness(0) invert(1); /* Hace el ícono blanco */
+}
+
+.message.success::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+.message.error::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+}
+
+.message.info::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+.message.warning::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    background: #003366;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid #B8860B;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-unam {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #003366;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.brand-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #B8860B;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+    background: rgba(184, 134, 11, 0.2);
+    color: #B8860B;
+}
+
+
+
+
+/* Carousel */
+.carousel-container {
+    width: 100%;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.carousel-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.slide-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.slide-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 2;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot.active {
+    background: white;
+    width: 30px;
+    border-radius: 6px;
+}
+
+/* Background images for slides (relative to this CSS file: ../img/...) */
+.carousel-slide.slide-1 { background-image: url('../img/carrusel1_alumnos.webp'); }
+.carousel-slide.slide-2 { background-image: url('../img/carrusel2_alumnos.webp'); }
+.carousel-slide.slide-3 { background-image: url('../img/carrusel3_alumnos.webp'); }
+
+/* Welcome Section */
+.welcome-section {
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 3rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.welcome-section h1 {
+    font-size: 2.2rem;
+    color: #003366;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Sections */
+.sections-title {
+    max-width: 1400px;
+    margin: 3rem auto 2rem;
+    padding: 0 2rem;
+    font-size: 1.8rem;
+    color: #003366;
+    font-weight: 700;
+}
+
+.sections-grid {
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.section-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left: 4px solid #003366;
+}
+
+.section-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 51, 102, 0.15);
+    border-left-color: #B8860B;
+}
+
+.section-image {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e0e0e0;
+}
+
+.section-img-practicas { background-image: url('../img/practicas.jpeg'); }
+.section-img-cursos { background-image: url('../img/cursos.jpg'); }
+.section-img-evaluaciones { background-image: url('../img/evaluaciones.jpg'); }
+.section-img-recursos { background-image: url('../img/recursos_educativos.webp'); }
+.section-img-grupos { background-image: url('../img/grupos.webp'); }
+
+.section-content {
+    padding: 1.5rem;
+}
+
+.section-icon {
+    width: 50px;
+    height: 50px;
+    background: #003366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-content h3 {
+    font-size: 1.4rem;
+    color: #003366;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.section-content p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+}
+
+.section-btn {
+    background: #003366;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.section-btn:hover {
+    background: #B8860B;
+    transform: translateX(5px);
+}
+
+/* Footer */
+.footer {
+    background: #003366;
+    color: white;
+    padding: 3rem 0 1rem;
+    margin-top: 4rem;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    color: #B8860B;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.footer-links a:hover {
+    color: #B8860B;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.social-icon:hover {
+    background: #B8860B;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.footer-desc {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+/* User Menu Styles */
+.user-section {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.profile-icon i {
+    font-size: 1.1rem;
+}
+
+.user-name-badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.logout-btn {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+    background: rgba(220, 53, 69, 0.3);
+    transform: translateY(-1px);
+}
+@media (max-width: 768px) {
+    .nav-links { gap: 1rem; }
+    .nav-links a span { display: none; }
+    .carousel-slide { height: 300px; }
+    .slide-content h2 { font-size: 2rem; }
+    .welcome-section h1 { font-size: 2rem; }
+    .sections-grid { grid-template-columns: 1fr; }
+}
+
+

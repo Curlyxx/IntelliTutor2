@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal del Alumno - IntelliTutor UNAM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+</head>
+<body>
+    <!-- Mensajes de Django -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="#"><i class="fas fa-book"></i> <span>Cursos</span></a></li>
+                <li><a href="#"><i class="fas fa-flask"></i> <span>Prácticas</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> <span>Progreso</span></a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> <span>Ayuda</span></a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
+                <div class="user-section">
+                    <ul class="user-menu">
+                        <li>
+                            <div class="profile-icon">
+                                <i class="fas fa-user"></i>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Usuario
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <button class="logout-btn" onclick="confirmLogout()">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Carousel -->
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div class="carousel-slide slide-1">
+                <div class="slide-content">
+                    <h2>Bienvenido a IntelliTutor UNAM</h2>
+                </div>
+            </div>
+            <div class="carousel-slide slide-2">
+                <div class="slide-content">
+                    <h2>Aprende a tu Ritmo</h2>
+                </div>
+            </div>
+            <div class="carousel-slide slide-3">
+                <div class="slide-content">
+                    <h2>Alcanza tus Metas</h2>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-buttons">
+            <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+            <div class="carousel-dot" onclick="goToSlide(1)"></div>
+            <div class="carousel-dot" onclick="goToSlide(2)"></div>
+        </div>
+    </div>
+
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1>Bienvenido Estudiante</h1>
+        <p>Explora tus prácticas, evaluaciones y recursos educativos en IntelliTutor UNAM.</p>
+    </div>
+
+    <!-- Sections Title -->
+    <h2 class="sections-title">Secciones</h2>
+
+    <!-- Sections Grid -->
+    <div class="sections-grid">
+        <div class="section-card">
+            <div class="section-image section-img-practicas"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <h3>Portal de Estudiante</h3>
+                <p>Accede y realiza tus prácticas asignadas.</p>
+                <button class="section-btn">
+                    Ir a Prácticas <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-cursos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h3>Mis Cursos</h3>
+                <p>Consulta tus cursos activos y materiales de estudio.</p>
+                <button class="section-btn">
+                    Ver Cursos <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-evaluaciones"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <h3>Evaluaciones</h3>
+                <p>Revisa tus calificaciones y evaluaciones pendientes.</p>
+                <button class="section-btn">
+                    Ver Evaluaciones <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="section-card">
+            <div class="section-image section-img-recursos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Recursos Educativos</h3>
+                <p>Accede a materiales, tutoriales y recursos adicionales.</p>
+                <button class="section-btn">
+                    Explorar Recursos <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-grupos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Tus grupos y compañeros</h3>
+                <p>Participa en discusiones con tus compañeros.</p>
+                <button class="section-btn">
+                    Ir a Grupos <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>IntelliTutor UNAM</h3>
+                    <p class="footer-desc">
+                        Plataforma educativa de la Universidad Nacional Autónoma de México para el desarrollo de prácticas y evaluaciones en línea.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Ayuda</a></li>
+                        <li><a href="#">Contacto</a></li>
+                        <li><a href="#">Sobre nosotros</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Aviso de Privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <div class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-x-twitter"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-linkedin-in"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Universidad Nacional Autónoma de México. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const carousel = document.getElementById('carousel');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const totalSlides = 3;
+
+        function goToSlide(index) {
+            currentSlide = index;
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        // Auto-advance carousel every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Auto-dismiss messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgs = document.querySelectorAll('.messages-container .message');
+            if (msgs.length) {
+                setTimeout(() => {
+                    msgs.forEach(m => m.classList.add('hide'));
+                    // remove from DOM after animation
+                    setTimeout(() => msgs.forEach(m => m.remove()), 600);
+                }, 5000);
+            }
+        });
+
+
+        function confirmLogout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = "{% url 'login:logout' %}";
+            }
+        }
+
+        // Opcional: Mostrar información del usuario al hacer clic en el icono
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileIcon = document.querySelector('.profile-icon');
+            if (profileIcon) {
+                profileIcon.addEventListener('click', function() {
+                    alert('Usuario: {{ user_name }}\nRol: {{ user_role|title }}');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
