@@ -87,16 +87,18 @@
                             <label class="form-label">Nombre</label>
                             <div class="input-group">
                                 <i class="fas fa-user input-icon"></i>
-                                <input type="text" name="first_name" class="form-control" required>
+                                <input type="text" name="first_name" class="form-control" maxlength="100" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" placeholder="Ej: Juan Carlos" value="{{ first_name|default:'' }}" onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(event.key)" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                             </div>
+                            <span class="error-message" id="first_name_error"></span>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Apellido</label>
+                            <label class="form-label">Apellidos</label>
                             <div class="input-group">
                                 <i class="fas fa-user input-icon"></i>
-                                <input type="text" name="last_name" class="form-control" required>
+                                <input type="text" name="last_name" class="form-control" maxlength="70" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" placeholder="Ej: Pérez García" value="{{ last_name|default:'' }}" onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(event.key)" oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')">
                             </div>
+                            <span class="error-message" id="last_name_error"></span>
                         </div>
 
                     </div>
@@ -107,16 +109,31 @@
                             <label class="form-label">Correo</label>
                             <div class="input-group">
                                 <i class="fas fa-envelope input-icon"></i>
-                                <input type="email" name="email" class="form-control" required>
+                                <input type="text" name="email" class="form-control" placeholder="Ej: juan@alumno.fesc.unam.mx" value="{{ email|default:'' }}">
                             </div>
+                            <span class="error-message" id="email_error"></span>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Usuario</label>
                             <div class="input-group">
                                 <i class="fas fa-at input-icon"></i>
-                                <input type="text" name="username" class="form-control" required>
+                                <input type="text" name="username" class="form-control" maxlength="50" placeholder="Ej: juanperez2024" value="{{ username|default:'' }}">
                             </div>
+                            <span class="error-message" id="username_error"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label class="form-label">Teléfono</label>
+                            <div class="input-group">
+                                <i class="fas fa-phone input-icon"></i>
+                                <input type="tel" name="telefono" class="form-control" placeholder="10 dígitos" maxlength="10" value="{{ telefono|default:'' }}" onkeypress="return /[0-9]/.test(event.key)" oninput="this.value = this.value.replace(/\D/g, '')">
+                            </div>
+                            <span class="error-message" id="telefono_error"></span>
                         </div>
 
                     </div>                    
@@ -127,31 +144,32 @@
                             <label class="form-label">Contraseña</label>
                             <div class="input-group">
                                 <i class="fas fa-lock input-icon"></i>
-                                <input type="password" id="password" name="password" class="form-control" required>
+                                <input type="password" id="password" name="password" class="form-control">
                                 <button type="button" class="toggle-password" data-target="password">👁</button>
                             </div>
-                            <span id="passwordStrength"></span>
+                            <span class="error-message" id="password_error"></span>
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Confirmar</label>
                             <div class="input-group">
                                 <i class="fas fa-lock input-icon"></i>
-                                <input type="password" id="password_confirm" name="password_confirm" class="form-control" required>
+                                <input type="password" id="password_confirm" name="password_confirm" class="form-control">
                                 <button type="button" class="toggle-password" data-target="password_confirm">👁</button>
                             </div>
+                            <span class="error-message" id="password_confirm_error"></span>
                         </div>
 
                     </div>
 
                     <div class="terms-section">
                         <label class="terms-group">
-                            <input type="checkbox" id="terms" name="terms" required>
+                            <input type="checkbox" id="terms" name="terms">
                             <span class="checkmark"></span>
                             Acepto términos institucionales
                         </label>
                         
-                        <a href="{% static 'login/docs/terminos_condiciones.pdf' %}" target="_blank" class="terms-link">
+                        <a href="{% static 'login/docs/terminos_y_condiciones_intellitutor.pdf' %}" target="_blank" class="terms-link">
                             <i class="fas fa-file-pdf"></i> Ver términos y condiciones (PDF)
                         </a>
                     </div>

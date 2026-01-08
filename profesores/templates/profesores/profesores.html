@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal del Profesor - IntelliTutor UNAM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+</head>
+<body>
+    <!-- Mensajes de Django -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM - Profesor</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="{% url 'profesores:mis_grupos' %}"><i class="fas fa-users"></i> <span>Mis Grupos</span></a></li>
+                <li><a href="#"><i class="fas fa-flask"></i> <span>Crear Prácticas</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i> <span>Calificaciones</span></a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i> <span>Reportes</span></a></li>
+                <div class="user-section">
+                    <ul class="user-menu">
+                        <li>
+                            <div class="profile-icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Profesor
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{% url 'login:logout' %}" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Carousel -->
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div class="carousel-slide slide-1">
+                <div class="slide-content">
+                    <h2>Bienvenido a IntelliTutor UNAM</h2>
+                </div>
+            </div>
+            <div class="carousel-slide slide-2">
+                <div class="slide-content">
+                    <h2>Enseña y Evalúa Efectivamente</h2>
+                </div>
+            </div>
+            <div class="carousel-slide slide-3">
+                <div class="slide-content">
+                    <h2>Gestiona tus Clases con Facilidad</h2>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-buttons">
+            <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+            <div class="carousel-dot" onclick="goToSlide(1)"></div>
+            <div class="carousel-dot" onclick="goToSlide(2)"></div>
+        </div>
+    </div>
+
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1>Portal del Profesor</h1>
+        <p>Gestiona tus clases, crea prácticas y evalúa a tus estudiantes en IntelliTutor UNAM.</p>
+    </div>
+
+    <!-- Sections Title -->
+    <h2 class="sections-title">Herramientas del Profesor</h2>
+
+    <!-- Sections Grid -->
+    <div class="sections-grid">
+        <!-- En la tarjeta de la sección grid -->
+        <div class="section-card">
+            <div class="section-image section-img-practicas"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Mis Grupos</h3>
+                <p>Administra tus grupos de estudiantes y asignaciones.</p>
+                <a href="{% url 'profesores:mis_grupos' %}" class="section-btn">
+                    Ver Grupos <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-cursos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <h3>Crear Prácticas</h3>
+                <p>Diseña y asigna nuevas prácticas para tus estudiantes.</p>
+                <button class="section-btn">
+                    Crear Práctica <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-evaluaciones"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <h3>Calificaciones</h3>
+                <p>Revisa y asigna calificaciones a tus estudiantes.</p>
+                <button class="section-btn">
+                    Ver Calificaciones <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-recursos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Reportes</h3>
+                <p>Genera reportes de progreso y estadísticas de tus grupos.</p>
+                <button class="section-btn">
+                    Ver Reportes <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-grupos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h3>Material Didáctico</h3>
+                <p>Sube y organiza recursos educativos para tus clases.</p>
+                <button class="section-btn">
+                    Gestionar Material <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tarjeta de Calendario eliminada como solicitaste -->
+    </div>
+
+    <!-- Footer (actualizado como el del admin) -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>IntelliTutor UNAM</h3>
+                    <p class="footer-desc">
+                        Plataforma educativa de la Universidad Nacional Autónoma de México para el desarrollo de prácticas y evaluaciones en línea.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Ayuda</a></li>
+                        <li><a href="#">Contacto</a></li>
+                        <li><a href="#">Sobre nosotros</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Aviso de Privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <div class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Universidad Nacional Autónoma de México. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const carousel = document.getElementById('carousel');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const totalSlides = 3;
+
+        function goToSlide(index) {
+            currentSlide = index;
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        // Auto-advance carousel every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Auto-dismiss messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgs = document.querySelectorAll('.messages-container .message');
+            if (msgs.length) {
+                setTimeout(() => {
+                    msgs.forEach(m => m.classList.add('hide'));
+                    // remove from DOM after animation
+                    setTimeout(() => msgs.forEach(m => m.remove()), 600);
+                }, 5000);
+            }
+        });
+
+        // Arreglar el problema de texto en el menú
+        document.addEventListener('DOMContentLoaded', function() {
+            // Asegurar que los textos del menú no se rompan
+            const navSpans = document.querySelectorAll('.nav-links a span');
+            navSpans.forEach(span => {
+                span.style.whiteSpace = 'nowrap';
+                span.style.display = 'inline-block';
+            });
+            
+            // También puedes ajustar el contenedor si es necesario
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks) {
+                navLinks.style.flexWrap = 'nowrap';
+            }
+        });
+
+        // Opcional: Mostrar información del usuario al hacer clic en el icono
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileIcon = document.querySelector('.profile-icon');
+            if (profileIcon) {
+                profileIcon.addEventListener('click', function() {
+                    alert('Usuario: {{ user_name }}\nRol: Profesor');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

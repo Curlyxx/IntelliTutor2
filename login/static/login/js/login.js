@@ -50,37 +50,55 @@ passwordInput.addEventListener('input', function() {
     }
 });
 
-// Validar al enviar
+// Validar al enviar con AJAX
 if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
-        let isValid = true;
-
-        // Validar usuario
-        if (usernameInput.value.trim() === '') {
-            showError(usernameError, 'El usuario es requerido');
-            isValid = false;
-        } else if (usernameInput.value.length < 3) {
-            showError(usernameError, 'El usuario debe tener al menos 3 caracteres');
-            isValid = false;
-        } else {
-            hideError(usernameError);
-        }
-
-        // Validar contraseña
-        if (passwordInput.value.trim() === '') {
-            showError(passwordError, 'La contraseña es requerida');
-            isValid = false;
-        } else if (passwordInput.value.length < 6) {
-            showError(passwordError, 'La contraseña debe tener al menos 6 caracteres');
-            isValid = false;
-        } else {
-            hideError(passwordError);
-        }
-
-        // Si no es válido, prevenir envío
-        if (!isValid) {
-            e.preventDefault();
-        }
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitBtn = this.querySelector('.btn-primary');
+        
+        // Deshabilitar botón
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+        submitBtn.disabled = true;
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 1500);
+            } else {
+                showAlert(data.message, 'error');
+                if (typeof grecaptcha !== 'undefined') {
+                    grecaptcha.reset();
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error de conexión. Intenta de nuevo.', 'error');
+            // No redirigir, mantener en login
+        })
+        .finally(() => {
+            // Rehabilitar botón
+            submitBtn.innerHTML = '<span>Iniciar Sesión</span><i class="fas fa-arrow-right"></i>';
+            submitBtn.disabled = false;
+        });
     });
 }
 
@@ -188,6 +206,34 @@ if (loginForm && rememberCheckbox) {
             localStorage.removeItem('rememberedUsername');
         }
     });
+}
+
+// ========================================
+// Función para mostrar alertas
+// ========================================
+function showAlert(message, type) {
+    // Remover alertas existentes
+    const existingAlerts = document.querySelectorAll('.dynamic-alert');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    // Crear nueva alerta
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} dynamic-alert`;
+    alert.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    // Insertar en el DOM
+    const container = document.querySelector('.form-container');
+    container.insertBefore(alert, container.firstChild);
+    
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        alert.style.transform = 'translateY(-20px)';
+        setTimeout(() => alert.remove(), 300);
+    }, 5000);
 }
 
 // ========================================

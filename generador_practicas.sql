@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-12-2025 a las 01:58:05
+-- Tiempo de generación: 08-01-2026 a las 03:02:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -258,18 +258,10 @@ CREATE TABLE `conceptos` (
 INSERT INTO `conceptos` (`id`, `nombre`, `descripcion`, `materia_id`) VALUES
 (1, 'Bases de datos NoSQL', 'Sistemas de bases de datos no relacionales', 1),
 (2, 'Seguridad en BD', 'Implementaci?n de medidas de seguridad', 1),
-(3, 'Estructuras de datos', 'Organizaci?n y manipulaci?n de datos', 2),
-(4, 'Algoritmos', 'Dise?o y an?lisis de algoritmos', 2),
-(5, 'POO', 'Programaci?n Orientada a Objetos', 2),
-(6, 'Patrones de dise?o', 'Soluciones comunes a problemas de dise?o', 2),
 (7, 'Regresi?n', 'Modelos de regresi?n y predicci?n', 3),
 (8, 'Clasificaci?n', 'Algoritmos de clasificaci?n', 3),
 (9, 'Clustering', 'Agrupamiento de datos', 3),
-(10, 'Redes neuronales', 'Deep learning y redes neuronales', 3),
-(11, 'Criptograf?a', 'T?cnicas de cifrado y seguridad', 4),
-(12, 'Seguridad en redes', 'Protecci?n de redes y comunicaciones', 4),
-(13, 'Ethical Hacking', 'Pruebas de penetraci?n', 4),
-(14, 'Forense digital', 'An?lisis forense de sistemas', 4);
+(10, 'Redes neuronales', 'Deep learning y redes neuronales', 3);
 
 -- --------------------------------------------------------
 
@@ -306,7 +298,6 @@ CREATE TABLE `criterios_evaluacion` (
 
 INSERT INTO `criterios_evaluacion` (`id`, `grupo_id`, `practicas_porcentaje`, `examenes_porcentaje`, `proyectos_porcentaje`, `asistencia_porcentaje`, `fecha_creacion`) VALUES
 (1, 1, 40.00, 30.00, 20.00, 10.00, '2025-11-12 22:33:44'),
-(2, 2, 40.00, 30.00, 20.00, 10.00, '2025-11-13 00:00:37'),
 (3, 3, 40.00, 30.00, 20.00, 10.00, '2025-11-23 20:28:43');
 
 -- --------------------------------------------------------
@@ -404,7 +395,12 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('pxg7gngpdqqvatud14g31u6odzr0xrug', '.eJw1jEsKAjEQBa8y9DqIGWTArBTceobQJA8N5ANJZxgU7y7BcVnUq_em3lBt8GTmo_pB5gQydI3YphuvIfJ0R_Z40T5A4hDJEEdsl8eAgyvpb2uJI0eT7gNnwS722xFpUpR7Qi3WdWRhMnpeTstZa60oNMtdnsgSHAs8Gakdny-MPzp3:1vQaQL:zwtUQXSCVuNTX62oWu3H8cuTDA2e_1LCoaoQ6AoASdk', '2025-12-17 00:08:49.359733');
+('oqe5ewox2udeuc8s466sfmw91gortocu', '.eJw1jcEKwjAQRH-l7LlImxbFnBQ8ePEbypJdbCDZwCaRgvjvUltPwzCPeW-omXXyBNb07VYEI4OFO2oK1FwDL4LE2tzw5QM2DxbiBXaYI_oAFuYf7bYwXX-8PNfl4FL8o5rC-osUvfhcFCnpvu3K1WWgBamRNU2ushQEa8ZuOJ-GbmzB5wlrmVmKd1iYwBat_PkCx0REjQ:1vcz8K:1a56qlqK9jwXOdT0UR4gyIioRXZtx5USNkTzlKo43-Y', '2026-01-20 04:57:28.824220'),
+('pwk4kzpcsbiuynxfbsgga8qaz3st7kc4', '.eJw1jcEKwjAQRH-l7LlImxbFnBQ8ePEbypJdbCDZwCaRgvjvUltPwzCPeW-omXXyBNb07VYEI4OFO2oK1FwDL4LE2tzw5QM2DxbiBXaYI_oAFuYf7bYwXX-8PNfl4FL8o5rC-osUvfhcFCnpvu3K1WWgBamRNU2ushQEa8ZuOJ-GbmzB5wlrmVmKd1iYwBat_PkCx0REjQ:1vdBGR:w0RAyrYuh6r1fua7Bb7d-yPvo8j_65c3FJkJjytN8Gc', '2026-01-20 17:54:39.921354'),
+('pxg7gngpdqqvatud14g31u6odzr0xrug', '.eJw1jEsKAjEQBa8y9DqIGWTArBTceobQJA8N5ANJZxgU7y7BcVnUq_em3lBt8GTmo_pB5gQydI3YphuvIfJ0R_Z40T5A4hDJEEdsl8eAgyvpb2uJI0eT7gNnwS722xFpUpR7Qi3WdWRhMnpeTstZa60oNMtdnsgSHAs8Gakdny-MPzp3:1vQaQL:zwtUQXSCVuNTX62oWu3H8cuTDA2e_1LCoaoQ6AoASdk', '2025-12-17 00:08:49.359733'),
+('r1l8ybh2zg0ku5cxlfib5i8b03raa35x', '.eJw1jcEKwjAQRH-l7LlImxbFnBQ8ePEbypJdbCDZwCaRgvjvUltPwzCPeW-omXXyBNb07VYEI4OFO2oK1FwDL4LE2tzw5QM2DxbiBXaYI_oAFuYf7bYwXX-8PNfl4FL8o5rC-osUvfhcFCnpvu3K1WWgBamRNU2ushQEa8ZuOJ-GbmzB5wlrmVmKd1iYwBat_PkCx0REjQ:1vczDr:PMV0617toFh7YXXnJdEN_Km2JZ5KWjS9Ok_cIBLQnJk', '2026-01-20 05:03:11.551050'),
+('wfiz0gtixe6ua3091u3t6jxbs30rjc6n', '.eJw1jUsKwkAQRK8Seh0kmcSIs1Jw4cYzhGa6MQ3zgc6MBMS7S0xcFUU96r2hzKyjEFjT1luJGBgs3FGTp-rqeYlIrMehuuFLPFYPjsQL7DgHFA8Wph_vtjBNO1ye63JwKfxRTX59RgoSZc6KlHTfdulqM1BDLIE1ja5wzAjW9E13PnVNX4PMI5Y8ccziMDOBzVr48wUm6UT4:1vdfJf:OI6nhTiNED6hAnIZSs7-ua1eVPqx5ZhJ9d_GGLwybmM', '2026-01-22 01:59:59.554940'),
+('y529q1t7qwv679gzjmky1gbaiulj9yzu', '.eJxFjEEKwjAQRa8isw7SFBGalbpz6wXCmI4Y6GR0kuBCevcSanH53-P9L9RM6uMIru_NOhIygYOAfLmeb7uAfI-o8LPEGKdVN3x6f2gfhDetMrX4pfKgLFv1v2yNBQOpMqn4UCkVBDdYO3RH2x0MxOyxlielEgMWGsEVrTQvPDs6AA:1vVGyU:ayhkaSkfMZkOcg63xp1Xs6SXQJLK72J9weBptbaS-So', '2025-12-29 22:23:26.242089');
 
 -- --------------------------------------------------------
 
@@ -435,13 +431,6 @@ CREATE TABLE `entregas` (
   `contenido` text DEFAULT NULL,
   `evaluacion_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `entregas`
---
-
-INSERT INTO `entregas` (`id`, `practica_id`, `estudiante_id`, `fecha_entrega`, `estado`, `archivos_url`, `calificacion`, `contenido`, `evaluacion_id`) VALUES
-(1, 1, 3, '2025-11-12 23:49:04', 'entregado', 'entrega_1_1763012944.py', NULL, 'sdf', 2);
 
 -- --------------------------------------------------------
 
@@ -486,14 +475,6 @@ CREATE TABLE `evaluaciones` (
   `comentarios` text DEFAULT NULL,
   `uso_ia` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `evaluaciones`
---
-
-INSERT INTO `evaluaciones` (`id`, `practica_id`, `estudiante_id`, `evaluador_id`, `fecha_evaluacion`, `estado`, `calificacion`, `comentarios`, `uso_ia`) VALUES
-(1, 1, 2, 4, '2025-11-12 22:46:09', 'pendiente', NULL, NULL, 1),
-(2, 1, 3, 4, '2025-11-12 22:46:09', 'entregado', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -540,9 +521,10 @@ CREATE TABLE `grupos` (
 --
 
 INSERT INTO `grupos` (`id`, `nombre`, `descripcion`, `materia_id`, `semestre_id`, `profesor_id`, `fecha_creacion`, `activo`, `turno`, `fecha_inicio`, `fecha_fin`, `evaluacion_finalizada`) VALUES
-(1, 'grupo1', 'el primer grupo', 1, 3, 4, '2025-11-12 22:33:44', 1, 'matutino', '2025-11-13', '2025-11-27', 0),
-(2, 'ASDGGGG', 'second group', 4, 2, 4, '2025-11-13 00:00:37', 1, 'vespertino', '2025-11-20', '2025-11-28', 0),
-(3, 'progamacion I', 'Curso de python', 3, 2, 4, '2025-11-23 20:28:43', 1, 'matutino', '2025-11-21', '2025-11-27', 0);
+(1, 'grupo1', 'el primer grupo', 1, 3, 4, '2025-11-12 22:33:44', 0, 'vespertino', '2025-11-13', '2025-11-27', 0),
+(3, 'progamacion I', 'Curso de python', 3, 2, 4, '2025-11-23 20:28:43', 1, 'matutino', '2025-11-21', '2025-11-27', 0),
+(7, '14', '234', 10, 3, 16, '2025-12-15 01:13:22', 1, 'mixto', '2025-12-24', '2025-12-31', 0),
+(8, 'Matemáticas GRUPO1', 'grupo A1 de infomática', 10, 3, 22, '2025-12-15 01:45:52', 1, 'vespertino', '2025-12-24', '2026-01-06', 0);
 
 -- --------------------------------------------------------
 
@@ -667,10 +649,8 @@ CREATE TABLE `materias` (
 
 INSERT INTO `materias` (`id`, `nombre`, `descripcion`, `creditos`) VALUES
 (1, 'Base de datos', 'Fundamentos y aplicaciones de bases de datos 2', 8),
-(2, 'Programaci?n', 'Programaci?n y desarrollo de software', 8),
 (3, 'Machine Learning', 'Aprendizaje autom?tico y an?lisis de datos', 8),
-(4, 'Seguridad Inform?tica', 'Seguridad de sistemas y redes', 8),
-(6, 'Cocina', 'tareas de cocina', 15);
+(10, 'Matemáticas I', 'Algoritmos matemáticos que permiten al alumno aprender sobre programación', 12);
 
 -- --------------------------------------------------------
 
@@ -736,6 +716,13 @@ CREATE TABLE `perfiles_administrador` (
   `fecha_creacion` datetime DEFAULT current_timestamp(),
   `fecha_actualizacion` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `perfiles_administrador`
+--
+
+INSERT INTO `perfiles_administrador` (`id`, `admin_id`, `departamento`, `cargo`, `fecha_creacion`, `fecha_actualizacion`) VALUES
+(1, 21, 'None', 'None', '2026-01-05 19:44:52', '2026-01-05 19:45:19');
 
 -- --------------------------------------------------------
 
@@ -820,13 +807,6 @@ CREATE TABLE `practicas` (
   `grupo_id` int(11) DEFAULT NULL,
   `tipo_asignacion` enum('practica','examen','proyecto') DEFAULT 'practica'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `practicas`
---
-
-INSERT INTO `practicas` (`id`, `titulo`, `materia_id`, `nivel_id`, `autor_id`, `concepto_id`, `herramienta_id`, `objetivo`, `introduccion`, `descripcion`, `fecha_entrega`, `tiempo_estimado`, `estado`, `fecha_creacion`, `uso_ia`, `grupo_id`, `tipo_asignacion`) VALUES
-(1, 'Introducción a algoritmos', 2, 2, 4, 4, 1, 'Aprender a crear algoritmos', NULL, NULL, '2025-11-21 00:00:00', 24, 'Pendiente', '2025-11-12 22:46:09', 1, 1, 'practica');
 
 -- --------------------------------------------------------
 
@@ -965,8 +945,10 @@ CREATE TABLE `semestres` (
 
 INSERT INTO `semestres` (`id`, `nombre`, `fecha_inicio`, `fecha_fin`, `activo`, `fecha_creacion`) VALUES
 (1, '2023-1', '2023-08-07', '2023-12-15', 0, '2025-11-12 21:40:32'),
-(2, '2023-2', '2024-01-29', '2024-06-07', 1, '2025-11-12 21:40:32'),
-(3, '2024-1', '2024-08-05', '2024-12-13', 0, '2025-11-12 21:40:32');
+(2, '2023-2', '2024-01-29', '2024-06-07', 0, '2025-11-12 21:40:32'),
+(3, '2024-1', '2024-08-05', '2024-12-13', 0, '2025-11-12 21:40:32'),
+(5, '2025-1', '2025-12-15', '2025-12-31', 1, '2025-12-14 23:50:38'),
+(6, '2024-2', '2024-01-09', '2024-06-15', 0, '2025-12-15 00:21:21');
 
 -- --------------------------------------------------------
 
@@ -991,7 +973,8 @@ CREATE TABLE `solicitudes_registro` (
 
 INSERT INTO `solicitudes_registro` (`id`, `nombre`, `email`, `password_hash`, `rol_solicitado`, `estado`, `fecha_solicitud`, `password`) VALUES
 (1, 'Lex', 'haroldcharold2016@gmail.com', 'scrypt:32768:8:1$4CUaEobiE2LieyN8$86d78cc79c272c9f85afd4342e7d6611af4e393750e807660fc967dc99c287428ad027936c33197c4a8334d52f9f1fbaa923a90eb2f84d54dc2875d97016761a', 'administrador', 'rechazada', '2025-11-12 21:49:47', 'comida123'),
-(2, 'profe2', 'prfo4@gmail.com', 'scrypt:32768:8:1$op2Ue6J45j3EE0AQ$77e68dc47a8f6843416a3072d6cdb0c0171a5381aa799529bc1257b9a5f37af1c77a7f7ca53413429cd85b8cb289092288597199d1134dd0187973596a3528d0', 'profesor', 'aprobada', '2025-11-23 20:32:59', '346234');
+(2, 'profe2', 'prfo4@gmail.com', 'scrypt:32768:8:1$op2Ue6J45j3EE0AQ$77e68dc47a8f6843416a3072d6cdb0c0171a5381aa799529bc1257b9a5f37af1c77a7f7ca53413429cd85b8cb289092288597199d1134dd0187973596a3528d0', 'profesor', 'aprobada', '2025-11-23 20:32:59', '346234'),
+(3, 'as', '2@gmail.com', 'scrypt:32768:8:1$MN1ypH7NwNROgwO9$134614cd467606b42835abbbf643cf308b73f5e1b8f550bf88fee8816bf777fdeccf0974be81420ec6c19db440ef19bd28f345db3071a366bb0ab146f3c3ad8c', 'profesor', 'pendiente', '2025-12-15 13:47:43', '11');
 
 -- --------------------------------------------------------
 
@@ -1031,7 +1014,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `email`, `password_hash`, `rol`, `fecha_creacion`, `numero_cuenta`, `perfil_completado`, `telefono`, `usuario`) VALUES
-(1, 'Alex1', '', '', 'scrypt:32768:8:1$wHerJajKbxHfcXy8$e1bbc0e92d05f34ef63a8f5ba1aacb24df08ebc4c967e32dd94d8582a4fa45c5416f88ba63e6a53d2cb2a6992b8d78b4a97e26357497184d7de9f2d2e370524c', 'administrador', '2025-11-12 21:41:01', 254935503, 0, NULL, ''),
+(1, 'Alex1', 'mendez', 'asd@gmail.com', 'scrypt:32768:8:1$wHerJajKbxHfcXy8$e1bbc0e92d05f34ef63a8f5ba1aacb24df08ebc4c967e32dd94d8582a4fa45c5416f88ba63e6a53d2cb2a6992b8d78b4a97e26357497184d7de9f2d2e370524c', 'administrador', '2025-11-12 21:41:01', 254935503, 0, '5536640448', 'lex1'),
 (2, 'user1', '', '2@gmail.com', 'scrypt:32768:8:1$c2XPUyl6kUOPYJ1e$aebea6b327173c05ebb596b83269e112c0c6fc40e6b0bbc2a58db78ce36defa8be1f968514068daedc7ede5466a94b3e4454204cb8e3983a61979bcd805b9b92', 'estudiante', '2025-11-12 22:18:59', 954130566, 0, NULL, ''),
 (3, 'user2', '', '3@gmail.com', 'scrypt:32768:8:1$ZWgWB0CfJnNwSVpB$22ce229d60314379d6aca0e1bbe4bdb5ea30e61591df9c252e5d0fe84a8ee02f18920f93525b7b67f938501d6d43d25e3286dc1423964ff3140f4f2155670aeb', 'estudiante', '2025-11-12 22:19:26', 942219917, 1, NULL, ''),
 (4, 'user3', '', '4@gmail.com', 'scrypt:32768:8:1$9QKNaF36XGYZrc1p$39e594aaef4c6677706f65224700a2e03ee894fcd79f93cad321e865bea1fdfc3e5ac4f9dc2d840d027a4774b75deb56b8fab38a63b741146cbf227ac18ce312', 'profesor', '2025-11-12 22:21:16', 408542267, 0, NULL, ''),
@@ -1041,12 +1024,14 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `email`, `password_hash`, `r
 (12, '12 12', '', '12@gmail.com', 'scrypt:16384:8:1$1eead29de4962f64816cb6718786098d$aa4b7d0a1e2a56349f5b94e91fc344c718b34011d4aa69b87c1cd1db264e23d187a5ebb61b48df73376cae06701b190fc22e67c4261dbecd2a10f79fcd0560b3', 'estudiante', '2025-11-30 15:55:45', 313515020, 0, NULL, '12'),
 (13, '123 123', '', '123@gmial.com', 'scrypt:16384:8:1$fabecea8b7c574cd73a21e2ce96e05c8$dd659735d9f6c5ed5afdeb1bf2068926cf8501e6ab19450fa88b2fc48f46784c1226c2959dc413fb42d5aabd9fdd8f5a75bc88ff231f528163e43742a933e6ce', 'estudiante', '2025-11-30 16:05:18', 118733573, 0, NULL, '123'),
 (14, '44 44', '', '44@gmas', 'scrypt:16384:8:1$6285d110f7d3c7e568bd7f53489b3078$86a332f77dc91ea869d3158058eb304ff2890d07cb6f615b23e1fbdf53938e412d41aca9b976aa403a75ba1862cbd4f0911e4aafcb352a8d3630fb3710de7a97', 'estudiante', '2025-11-30 16:09:23', 547638346, 0, NULL, '44'),
-(15, '45', '45', '45@asd', 'scrypt:16384:8:1$95d2387c24571168b0f1d8939830a676$3a01a921996c1742eb2640eec92286f3a5fdfe31992da424000ed0a0a57f62a33c42de4256e6aa07a289776fca712661f0acab4ea807ecad9a77e3acd5240ffd', 'estudiante', '2025-11-30 16:17:48', 118411438, 0, NULL, '45'),
-(16, 'qw', 'qw', 'qw@ew', 'scrypt:16384:8:1$95d1cb5aa7238a55c9abe48350ae8cde$8748b1b22a33bde933c183fed247c6bc3fe855e39d90a0376af23ff8313c1fb1dc2ca9952b42bbfa192bc0c475803290d63c575d0ba03db1c307f049944e8b96', 'estudiante', '2025-11-30 18:05:46', 227918694, 0, NULL, 'qw'),
+(15, 'Carlos', 'Mendoza del Rio', '45@asd.com', 'scrypt:16384:8:1$95d2387c24571168b0f1d8939830a676$3a01a921996c1742eb2640eec92286f3a5fdfe31992da424000ed0a0a57f62a33c42de4256e6aa07a289776fca712661f0acab4ea807ecad9a77e3acd5240ffd', 'profesor', '2025-11-30 16:17:48', 118411438, 0, '2342342342', '451'),
+(16, 'maria luisa', 'del carmen', 'qw@ew.com', 'scrypt:16384:8:1$95d1cb5aa7238a55c9abe48350ae8cde$8748b1b22a33bde933c183fed247c6bc3fe855e39d90a0376af23ff8313c1fb1dc2ca9952b42bbfa192bc0c475803290d63c575d0ba03db1c307f049944e8b96', 'profesor', '2025-11-30 18:05:46', 227918694, 0, '4564564564', 'qw'),
 (17, 'user1', 'asd', 'asd@asd', 'scrypt:16384:8:1$1b04df71f694b96d1c65a0e2fb01b489$ee494c06a59b7063e5a695eb0f6c474b918a276c839248d017ed858fa16b2dd234578896a087cf254eb26ac318b505c9af37f5e236dc1676ca966fdb4e3209dd', 'estudiante', '2025-11-30 18:10:56', 399009850, 0, NULL, 'cc'),
 (18, 'xx', 'xx', 'xx@asd', 'scrypt:16384:8:1$c29dc3acb3b491f6fc17ba6faedde27d$8a56a21e61d8ea854d79a85cc982b209904c8be63e9f269cecbe1c17472168168326bd75706dbbb45ce55b5caa9876d5be86ddec3b543e217f8ee0bb5249f870', 'estudiante', '2025-11-30 18:12:48', 373941731, 0, NULL, 'xx'),
 (19, 'user5', '', '5@gmail.com', 'scrypt:32768:8:1$qoi74cV055SnsNU9$3e737b70ac51738146961a211a00a31add320293236277bcffa02b86c692879a0eb658d3dd58e7c4f0c647e24c04442f010f2c0f14f9b9880e13c49e21b532c8', 'estudiante', '2025-11-30 19:09:33', 933939988, 1, NULL, ''),
-(20, 'Alex', 'Davila Mendez', 'alex@gmail.com', 'scrypt:16384:8:1$e2eebe782c716f27b1a90366b07f583e$a48aa3272ee0ee9c4cad0765b28f12e65ea8839138f8e21ad6ce0a5940271fb6af3791c99f54458ad2d6184125f6e6c893a43ff5d0641331b482059ce37d71eb', 'estudiante', '2025-12-02 18:07:14', 126469111, 0, NULL, 'alex1');
+(20, 'Alex', 'Davila Mendez', 'alex@gmail.com', 'scrypt:16384:8:1$e2eebe782c716f27b1a90366b07f583e$a48aa3272ee0ee9c4cad0765b28f12e65ea8839138f8e21ad6ce0a5940271fb6af3791c99f54458ad2d6184125f6e6c893a43ff5d0641331b482059ce37d71eb', 'estudiante', '2025-12-02 18:07:14', 126469111, 0, NULL, 'alex1'),
+(21, 'Harold Alexnader56', 'Davila Mendex', 'haroldcharold2016@gmail.com', 'scrypt:16384:8:1$b9914ac77e810f665fa65ee35d74e2e4$06d90a8f1c5f713d4270874ee1f67fe7138846c0858c81cb05acf073f91152946b0bb77b8c8e9dcd31f736fec1d57837b6c8317fda40d1ac46fc8e612f8374d6', 'administrador', '2025-12-14 15:16:39', 240397304, 1, '5536640445', 'Alex2'),
+(22, 'camBIAR', 'cambiar', 'cambiar@qwe.com', 'scrypt:16384:8:1$8382d2fab1cd597724864714dca96143$74c2e8e3189db3950e4e9ea1874b223a11590f05d321bd54385ad845bc8cccdb27c5020d0d95c6361786d6726d582769d52ddcbf191fda12c1c8a858670e308a', 'profesor', '2025-12-14 18:41:31', 911906104, 0, '1231231231', 'cambiar1');
 
 -- --------------------------------------------------------
 
@@ -1598,7 +1583,7 @@ ALTER TABLE `evaluaciones_ia`
 -- AUTO_INCREMENT de la tabla `grupos`
 --
 ALTER TABLE `grupos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `grupo_estudiante`
@@ -1634,7 +1619,7 @@ ALTER TABLE `marcos_perfil`
 -- AUTO_INCREMENT de la tabla `materias`
 --
 ALTER TABLE `materias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `modelo_pesos`
@@ -1658,7 +1643,7 @@ ALTER TABLE `notificaciones`
 -- AUTO_INCREMENT de la tabla `perfiles_administrador`
 --
 ALTER TABLE `perfiles_administrador`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `perfiles_estudiante`
@@ -1736,13 +1721,13 @@ ALTER TABLE `rubrica_niveles`
 -- AUTO_INCREMENT de la tabla `semestres`
 --
 ALTER TABLE `semestres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudes_registro`
 --
 ALTER TABLE `solicitudes_registro`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tiempo_registrado`
@@ -1754,7 +1739,7 @@ ALTER TABLE `tiempo_registrado`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `versiones`

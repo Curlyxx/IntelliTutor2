@@ -23,9 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('home.urls')),  # Ruta raíz apunta a home
     path('login/', include('login.urls')),
-    path('alumnos/', include('alumnos.urls')),  # Añade esta línea
-    #path('profesores/', include('profesores.urls')),
-    #path('administradores/', include('administradores.urls')),
+    path('alumnos/', include('alumnos.urls')),
+    path('profesores/', include('profesores.urls')),
+    path('administradores/', include('administradores.urls')),
 ]
 
 if settings.DEBUG:

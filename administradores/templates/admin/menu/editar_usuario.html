@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Usuario - IntelliTutor UNAM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+    <style>
+        .user-info-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .user-header {
+            background: linear-gradient(135deg, #003b7a, #0b1736);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,59,122,0.3);
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+        
+        .user-table-container {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,59,122,0.1);
+        }
+        
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .user-table th {
+            background: linear-gradient(135deg, #003b7a, #0b1736);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            border-radius: 8px 0 0 8px;
+            width: 40%;
+        }
+        
+        .user-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            background: rgba(0,59,122,0.02);
+            font-weight: 500;
+        }
+        
+        .user-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .role-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+        
+        .role-administrador {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .role-profesor {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+        
+        .role-estudiante {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .privileges-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,59,122,0.1);
+            height: fit-content;
+        }
+        
+        .privileges-title {
+            color: #003b7a;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .privilege-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(0,59,122,0.05);
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .privilege-icon {
+            color: #28a745;
+            font-size: 16px;
+            width: 20px;
+        }
+        
+        .privilege-text {
+            color: #495057;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #6c757d;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003b7a, #0b1736);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 10px 30px rgba(0,59,122,0.3);
+        }
+        
+        .user-avatar i {
+            font-size: 32px;
+            color: white;
+        }
+        
+        .user-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #003b7a;
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .user-detail-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border-left: 6px solid #003b7a;
+        }
+
+        .info-card h3 {
+            color: #003b7a;
+            margin-bottom: 20px;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row span {
+            color: #6c757d;
+            font-weight: 500;
+            width: 40%;
+        }
+
+        .info-row .info-value {
+            color: #212529;
+            font-weight: 600;
+            width: 60%;
+            text-align: right;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #003b7a;
+            box-shadow: 0 0 0 3px rgba(0,59,122,0.1);
+        }
+
+        .edit-input.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .edit-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: #138496;
+        }
+
+        .save-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .role-card {
+            text-align: center;
+        }
+
+        .role-main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-size: 22px;
+            font-weight: 800;
+            margin: 15px 0;
+        }
+
+        .role-description {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .role-select {
+            width: 200px;
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 10px;
+        }
+
+        .role-administrador {
+            background: linear-gradient(135deg, #e74c3c, #c0392b, #8e44ad);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(231,76,60,0.3);
+        }
+
+        .role-profesor {
+            background: linear-gradient(135deg, #27ae60, #229954, #16a085);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(39,174,96,0.3);
+        }
+
+        .role-estudiante {
+            background: linear-gradient(135deg, #3498db, #2980b9, #1abc9c);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 8px 20px rgba(52,152,219,0.3);
+        }
+
+        .privilege-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .privilege-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(0,59,122,0.05);
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .privilege-list li i {
+            color: #28a745;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM - Administrador</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'administradores:admin' %}"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="{% url 'administradores:usuarios' %}"><i class="fas fa-users"></i> <span>Usuarios</span></a></li>
+                <li><a href="{% url 'administradores:materias' %}"><i class="fas fa-book"></i> <span>Materias</span></a></li>
+                <li><a href="{% url 'administradores:grupos' %}"><i class="fas fa-users-cog"></i> <span>Grupos</span></a></li>
+                <li><a href="{% url 'administradores:semestres' %}"><i class="fas fa-calendar-alt"></i> <span>Semestres</span></a></li>
+                <li><a href="#"><i class="fas fa-clipboard-list"></i> <span>Solicitudes</span></a></li>
+                <div class="user-section">
+                    <ul class="user-menu">
+                        <li>
+                            <div class="profile-icon">
+                                <i class="fas fa-user-shield"></i>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Administrador
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{% url 'login:logout' %}" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="user-info-container">
+        <a href="{% url 'administradores:usuarios' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver a Usuarios
+        </a>
+        
+        <div class="user-header">
+            <h1><i class="fas fa-user-circle"></i> Información del Usuario</h1>
+            <p>Detalles completos del usuario seleccionado</p>
+        </div>
+
+        <div class="content-grid">
+
+        <!-- COLUMNA PRINCIPAL -->
+        <div class="user-detail-cards">
+
+            <!-- CARD: Datos Personales -->
+            <div class="info-card">
+                <h3>
+                    <span><i class="fas fa-id-badge"></i> Datos del Usuario</span>
+                    <button class="edit-btn" onclick="toggleEdit()" id="editBtn">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                </h3>
+
+                <form id="userForm">
+                    <div class="info-row">
+                        <span>Nombre completo</span>
+                        <div class="info-value">
+                            <span id="nombre-display">{{ usuario.nombre }} {{ usuario.apellido }}</span>
+                            <div id="nombre-edit" style="display: none;">
+                                <input type="text" class="edit-input" id="nombre" value="{{ usuario.nombre }}" 
+                                       onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(event.key)" 
+                                       oninput="validateNombre(this)" maxlength="100" placeholder="Nombre">
+                                <input type="text" class="edit-input" id="apellido" value="{{ usuario.apellido }}" 
+                                       onkeypress="return /[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/.test(event.key)" 
+                                       oninput="validateApellido(this)" maxlength="70" placeholder="Apellido" style="margin-top: 5px;">
+                                <div class="error-message" id="nombre_error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Usuario</span>
+                        <div class="info-value">
+                            <span id="usuario-display">{{ usuario.usuario }}</span>
+                            <div id="usuario-edit" style="display: none;">
+                                <input type="text" class="edit-input" id="usuario" value="{{ usuario.usuario }}" 
+                                       maxlength="50" placeholder="Usuario">
+                                <div class="error-message" id="usuario_error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Correo institucional</span>
+                        <div class="info-value">
+                            <span id="email-display">{{ usuario.email }}</span>
+                            <div id="email-edit" style="display: none;">
+                                <input type="email" class="edit-input" id="email" value="{{ usuario.email }}" 
+                                       placeholder="correo@ejemplo.com">
+                                <div class="error-message" id="email_error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Teléfono</span>
+                        <div class="info-value">
+                            <span id="telefono-display">{{ usuario.telefono|default:"No registrado" }}</span>
+                            <div id="telefono-edit" style="display: none;">
+                                <input type="tel" class="edit-input" id="telefono" value="{{ usuario.telefono|default:'' }}" 
+                                       onkeypress="return /[0-9]/.test(event.key)" 
+                                       oninput="validateTelefono(this)" maxlength="10" placeholder="1234567890">
+                                <div class="error-message" id="telefono_error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Número de cuenta</span>
+                        <div class="info-value">
+                            <span>{{ usuario.numero_cuenta|default:"No asignado" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span>Fecha de registro</span>
+                        <div class="info-value">
+                            <span>{{ usuario.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                        </div>
+                    </div>
+
+                    <div id="edit-actions" style="display: none; margin-top: 20px; text-align: center;">
+                        <button type="button" class="save-btn" onclick="saveChanges()">
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="cancelEdit()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- CARD: Rol -->
+            <div class="info-card role-card">
+                <h3>
+                    <span><i class="fas fa-user-tag"></i> Rol del Sistema</span>
+                    {% if usuario.rol != 'administrador' %}
+                        <button class="edit-btn" onclick="toggleRoleEdit()" id="roleEditBtn">
+                            <i class="fas fa-user-cog"></i> Cambiar
+                        </button>
+                    {% endif %}
+                </h3>
+                
+                <div id="role-display">
+                    <div class="role-main role-{{ usuario.rol }}">
+                        {% if usuario.rol == 'administrador' %}
+                            <i class="fas fa-crown"></i>
+                            <span>ADMINISTRADOR</span>
+                        {% elif usuario.rol == 'profesor' %}
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>PROFESOR</span>
+                        {% else %}
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>ESTUDIANTE</span>
+                        {% endif %}
+                    </div>
+                    <div class="role-description">
+                        {% if usuario.rol == 'administrador' %}
+                            Control total del sistema y gestión de usuarios
+                        {% elif usuario.rol == 'profesor' %}
+                            Gestión de materias, grupos y evaluaciones
+                        {% else %}
+                            Acceso a materias y realización de prácticas
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if usuario.rol != 'administrador' %}
+                <div id="role-edit" style="display: none; text-align: center;">
+                    <select class="role-select" id="newRole">
+                        <option value="administrador" {% if usuario.rol == 'administrador' %}selected{% endif %}>Administrador</option>
+                        <option value="profesor" {% if usuario.rol == 'profesor' %}selected{% endif %}>Profesor</option>
+                        <option value="estudiante" {% if usuario.rol == 'estudiante' %}selected{% endif %}>Estudiante</option>
+                    </select>
+                    <div style="margin-top: 15px;">
+                        <button type="button" class="save-btn" onclick="saveRoleChange()">
+                            <i class="fas fa-save"></i> Guardar Rol
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="cancelRoleEdit()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+                <h3><i class="fas fa-user-shield"></i> Rol en el Sistema</h3>
+
+                <div class="role-main">
+                    {% if usuario.rol == 'administrador' %}
+                        <i class="fas fa-crown"></i>
+                    {% elif usuario.rol == 'profesor' %}
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    {% else %}
+                        <i class="fas fa-graduation-cap"></i>
+                    {% endif %}
+                    <span>{{ usuario.rol|upper }}</span>
+                </div>
+
+                <p class="role-description">
+                    Este rol determina los permisos y alcances dentro de IntelliTutor UNAM.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: PRIVILEGIOS -->
+        <div class="privileges-card">
+            <h3 class="privileges-title">
+                <i class="fas fa-shield-alt"></i> Privilegios Asignados
+            </h3>
+
+            {% if usuario.rol == 'administrador' %}
+                <ul class="privilege-list">
+                    <li><i class="fas fa-users-cog"></i> Gestión total de usuarios</li>
+                    <li><i class="fas fa-user-edit"></i> Modificación de roles</li>
+                    <li><i class="fas fa-book"></i> Administración de materias</li>
+                    <li><i class="fas fa-users"></i> Control de grupos</li>
+                    <li><i class="fas fa-calendar-alt"></i> Gestión de periodos académicos</li>
+                    <li><i class="fas fa-clipboard-list"></i> Revisión de solicitudes</li>
+                    <li><i class="fas fa-cogs"></i> Configuración avanzada del sistema</li>
+                    <li><i class="fas fa-database"></i> Acceso a datos</li>
+                </ul>
+            {% elif usuario.rol == 'profesor' %}
+                <ul class="privilege-list">
+                    <li><i class="fas fa-book-open"></i> Gestión de prácticas</li>
+                    <li><i class="fas fa-tasks"></i> Evaluación de entregas</li>
+                    <li><i class="fas fa-comments"></i> Retroalimentación académica</li>
+                    <li><i class="fas fa-users"></i> Gestión de grupos asignados</li>
+                </ul>
+            {% else %}
+                <ul class="privilege-list">
+                    <li><i class="fas fa-upload"></i> Entrega de prácticas</li>
+                    <li><i class="fas fa-eye"></i> Consulta de calificaciones</li>
+                    <li><i class="fas fa-comment-dots"></i> Recepción de retroalimentación</li>
+                </ul>
+            {% endif %}
+        </div>
+
+    </div>
+
+    </div>
+
+    <div id="userId" style="display:none;">{{ usuario.id }}</div>
+    
+    <script>
+        var isEditing = false;
+        var isRoleEditing = false;
+        
+        function toggleEdit() {
+            isEditing = !isEditing;
+            var displays = document.querySelectorAll('[id$="-display"]');
+            var edits = document.querySelectorAll('[id$="-edit"]');
+            var editBtn = document.getElementById('editBtn');
+            var editActions = document.getElementById('edit-actions');
+            
+            displays.forEach(el => el.style.display = isEditing ? 'none' : 'block');
+            edits.forEach(el => el.style.display = isEditing ? 'block' : 'none');
+            editActions.style.display = isEditing ? 'block' : 'none';
+            
+            editBtn.innerHTML = isEditing ? '<i class="fas fa-times"></i> Cancelar' : '<i class="fas fa-edit"></i> Editar';
+        }
+        
+        function cancelEdit() {
+            // Restaurar valores originales
+            document.getElementById('nombre').value = '{{ usuario.nombre }}';
+            document.getElementById('apellido').value = '{{ usuario.apellido }}';
+            document.getElementById('usuario').value = '{{ usuario.usuario }}';
+            document.getElementById('email').value = '{{ usuario.email }}';
+            document.getElementById('telefono').value = '{{ usuario.telefono|default:"" }}';
+            
+            clearAllErrors();
+            toggleEdit();
+        }
+        
+        function toggleRoleEdit() {
+            isRoleEditing = !isRoleEditing;
+            document.getElementById('role-display').style.display = isRoleEditing ? 'none' : 'block';
+            document.getElementById('role-edit').style.display = isRoleEditing ? 'block' : 'none';
+            
+            var roleEditBtn = document.getElementById('roleEditBtn');
+            roleEditBtn.innerHTML = isRoleEditing ? '<i class="fas fa-times"></i> Cancelar' : '<i class="fas fa-user-cog"></i> Cambiar';
+        }
+        
+        function cancelRoleEdit() {
+            document.getElementById('newRole').value = '{{ usuario.rol }}';
+            toggleRoleEdit();
+        }
+        
+        function validateNombre(input) {
+            var value = input.value.trim();
+            var errorElement = document.getElementById('nombre_error');
+            
+            if (!value) {
+                showFieldError('nombre_error', 'El nombre es obligatorio');
+                return false;
+            } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
+                showFieldError('nombre_error', 'Solo letras, acentos, ñ y espacios');
+                return false;
+            } else {
+                clearFieldError('nombre_error');
+                return true;
+            }
+        }
+        
+        function validateApellido(input) {
+            var value = input.value.trim();
+            
+            if (!value) {
+                showFieldError('nombre_error', 'Los apellidos son obligatorios');
+                return false;
+            } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value)) {
+                showFieldError('nombre_error', 'Solo letras, acentos, ñ y espacios');
+                return false;
+            } else {
+                clearFieldError('nombre_error');
+                return true;
+            }
+        }
+        
+        function validateTelefono(input) {
+            var value = input.value.trim();
+            
+            if (!value) {
+                showFieldError('telefono_error', 'El teléfono es obligatorio');
+                return false;
+            } else if (!/^[0-9]{10}$/.test(value)) {
+                showFieldError('telefono_error', 'Exactamente 10 dígitos');
+                return false;
+            } else {
+                clearFieldError('telefono_error');
+                return true;
+            }
+        }
+        
+        function showFieldError(errorId, message) {
+            var errorElement = document.getElementById(errorId);
+            var input = errorElement.previousElementSibling;
+            
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            if (input) input.classList.add('error');
+        }
+        
+        function clearFieldError(errorId) {
+            var errorElement = document.getElementById(errorId);
+            var input = errorElement.previousElementSibling;
+            
+            errorElement.classList.remove('show');
+            if (input) input.classList.remove('error');
+        }
+        
+        function clearAllErrors() {
+            document.querySelectorAll('.error-message').forEach(function(error) {
+                error.classList.remove('show');
+            });
+            document.querySelectorAll('.edit-input').forEach(function(input) {
+                input.classList.remove('error');
+            });
+        }
+        
+        function saveChanges() {
+            clearAllErrors();
+            var hasErrors = false;
+            
+            // Validar campos
+            var nombre = document.getElementById('nombre');
+            var apellido = document.getElementById('apellido');
+            var usuario = document.getElementById('usuario');
+            var email = document.getElementById('email');
+            var telefono = document.getElementById('telefono');
+            
+            if (!validateNombre(nombre) || !validateApellido(apellido)) hasErrors = true;
+            
+            if (!usuario.value.trim()) {
+                showFieldError('usuario_error', 'El usuario es obligatorio');
+                hasErrors = true;
+            }
+            
+            if (!email.value.trim()) {
+                showFieldError('email_error', 'El correo es obligatorio');
+                hasErrors = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                showFieldError('email_error', 'Formato de correo inválido');
+                hasErrors = true;
+            }
+            
+            if (!telefono.value.trim()) {
+                showFieldError('telefono_error', 'El teléfono es obligatorio');
+                hasErrors = true;
+            } else if (!validateTelefono(telefono)) {
+                hasErrors = true;
+            }
+            
+            if (!hasErrors) {
+                // Enviar datos al servidor
+                var userId = document.getElementById('userId').textContent;
+                var formData = {
+                    user_id: parseInt(userId),
+                    nombre: nombre.value.trim(),
+                    apellido: apellido.value.trim(),
+                    usuario: usuario.value.trim(),
+                    email: email.value.trim(),
+                    telefono: telefono.value.trim()
+                };
+                
+                fetch('{% url "administradores:actualizar_usuario" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        showAlert('Usuario actualizado exitosamente', 'success');
+                        setTimeout(function() { location.reload(); }, 1500);
+                    } else {
+                        showAlert(data.message, 'error');
+                        setTimeout(function() { location.reload(); }, 2000);
+                    }
+                })
+                .catch(function(error) {
+                    showAlert('Error de conexión. Inténtalo de nuevo.', 'error');
+                    setTimeout(function() { location.reload(); }, 2000);
+                });
+            }
+        }
+        
+        function saveRoleChange() {
+            var newRole = document.getElementById('newRole').value;
+            
+            fetch('{% url "administradores:cambiar_rol" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: parseInt(document.getElementById('userId').textContent),
+                    new_role: newRole
+                })
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    setTimeout(function() { location.reload(); }, 1500);
+                } else {
+                    showAlert(data.message, 'error');
+                }
+            })
+            .catch(function(error) {
+                showAlert('Error de conexión. Inténtalo de nuevo.', 'error');
+            });
+        }
+        
+        function showAlert(message, type) {
+            var existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(function(alert) { alert.remove(); });
+            
+            var alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-' + type;
+            alertDiv.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i><span>' + message + '</span>';
+            
+            var container = document.querySelector('.user-info-container');
+            container.insertBefore(alertDiv, container.querySelector('.user-header'));
+            
+            setTimeout(function() {
+                alertDiv.style.opacity = '0';
+                setTimeout(function() { alertDiv.remove(); }, 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

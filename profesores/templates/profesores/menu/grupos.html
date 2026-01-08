@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Grupos - IntelliTutor UNAM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+   <style>
+        .grupos-container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .grupos-header {
+            background: linear-gradient(135deg, #003b7a, #0b1736);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 59, 122, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grupos-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .grupos-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .grupos-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .stats-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-badge:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        /* SECCIÓN INFORMATIVA - AJUSTADA */
+        .info-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #003b7a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .info-section h3 {
+            color: #003b7a;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section h3 i {
+            font-size: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+        }
+
+        .info-card h4 {
+            color: #003b7a;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card h4 i {
+            font-size: 0.9rem;
+        }
+
+        .info-card ul {
+            margin: 0;
+            padding-left: 18px;
+            color: #495057;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .info-card ul li {
+            margin-bottom: 4px;
+        }
+        
+        .grupos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .grupo-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 59, 122, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grupo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #003b7a, #ffcc33);
+        }
+        
+        .grupo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 59, 122, 0.15);
+            border-color: rgba(0, 59, 122, 0.2);
+        }
+        
+        .grupo-card.active {
+            background: linear-gradient(145deg, #ffffff, #f0f5ff);
+        }
+        
+        .grupo-card.inactive {
+            opacity: 0.9;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+        }
+        
+        .grupo-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .grupo-card-header i {
+            font-size: 20px;
+            color: #003b7a;
+            background: rgba(0, 59, 122, 0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+        
+        .grupo-card-header span {
+            font-size: 18px;
+            font-weight: 700;
+            color: #003b7a;
+            line-height: 1.3;
+        }
+        
+        .grupo-card-body {
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+        
+        .grupo-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .grupo-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            color: #495057;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .grupo-info-item i {
+            color: #003b7a;
+            width: 20px;
+            margin-top: 2px;
+        }
+        
+        .grupo-info-label {
+            font-weight: 600;
+            min-width: 100px;
+            color: #003b7a;
+        }
+        
+        .grupo-info-value {
+            flex: 1;
+        }
+        
+        .grupo-status {
+            background: rgba(0, 59, 122, 0.05);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 59, 122, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-active {
+            background: #e7f3ff;
+            color: #003b7a;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .turno-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .turno-matutino {
+            background: linear-gradient(135deg, #ffcc33, #e6b800);
+            color: #003b7a;
+        }
+        
+        .turno-vespertino {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+        
+        .turno-mixto {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+        
+        .turno-nocturno {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+        }
+        
+        .grupo-card-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .icon-btn.ver {
+            background: #3498db;
+            color: white;
+        }
+        
+        .icon-btn.practicas {
+            background: #9b59b6;
+            color: white;
+        }
+        
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(135deg, #5a6268, #3d4349);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(108, 117, 125, 0.4);
+        }
+        
+        /* Mensajes de alerta */
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #003b7a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grupos-header {
+                padding: 30px 20px;
+            }
+            
+            .grupos-header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .grupos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            
+            .grupo-card {
+                padding: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mensajes Django */
+        .messages-container {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 20px;
+        }
+        
+        .message {
+            padding: 15px 20px;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.hide {
+            animation: fadeOut 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mensajes Django -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM - Profesor</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'profesores:profesores' %}"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="{% url 'profesores:mis_grupos' %}" class="active"><i class="fas fa-users"></i> <span>Mis Grupos</span></a></li>
+                <li><a href="{% url 'profesores:crear_practicas' %}"><i class="fas fa-flask"></i> <span>Crear Prácticas</span></a></li>
+                <li><a href="{% url 'profesores:calificaciones' %}"><i class="fas fa-chart-bar"></i> <span>Calificaciones</span></a></li>
+                <li><a href="{% url 'profesores:reportes' %}"><i class="fas fa-file-alt"></i> <span>Reportes</span></a></li>
+                <div class="user-section">
+                    <ul class="user-menu">
+                        <li>
+                            <div class="profile-icon">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Profesor
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{% url 'login:logout' %}" class="logout-btn" onclick="return confirm('¿Estás seguro de cerrar sesión?')">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="grupos-container">
+        <a href="{% url 'profesores:profesores' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver al Portal
+        </a>
+        
+        <div class="grupos-header">
+            <h1><i class="fas fa-users"></i> Mis Grupos</h1>
+            <p><i class="fas fa-chalkboard-teacher"></i> Gestiona y visualiza tus grupos académicos en IntelliTutor UNAM</p>
+            <div style="margin-top: 15px;">
+                <span class="stats-badge">
+                    <i class="fas fa-database"></i> Total de grupos: {{ total_grupos }}
+                </span>
+                {% if periodo_actual %}
+                <span class="stats-badge" style="margin-left: 10px;">
+                    <i class="fas fa-calendar-alt"></i> Período: {{ periodo_actual.nombre }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Sección informativa -->
+        <div class="info-section">
+            <h3><i class="fas fa-info-circle"></i> Información de los Grupos</h3>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4><i class="fas fa-users"></i> Gestión de Grupos</h4>
+                    <ul>
+                        <li>Estos son los grupos asignados a tu cargo</li>
+                        <li>Cada grupo tiene una materia específica</li>
+                        <li>Los estudiantes se inscriben a estos grupos</li>
+                        <li>Puedes ver el detalle de cada grupo</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h4><i class="fas fa-cogs"></i> Funcionamiento</h4>
+                    <ul>
+                        <li>Haz clic en "Ver" para acceder al detalle</li>
+                        <li>Revisa estudiantes y prácticas por grupo</li>
+                        <li>Los grupos inactivos no permiten nuevas inscripciones</li>
+                        <li>Contacta al administrador para cambios</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del período actual -->
+        {% if periodo_actual %}
+        <div class="alert alert-info" style="background: linear-gradient(135deg, #d1ecf1, #bee5eb); border: 1px solid #abdde5; border-left: 4px solid #17a2b8;">
+            <i class="fas fa-calendar-check"></i>
+            <div>
+                <strong>Periodo Académico Actual:</strong> {{ periodo_actual.nombre }}
+                <br>
+                <small>{{ periodo_actual.fecha_inicio|date:"d/m/Y" }} - {{ periodo_actual.fecha_fin|date:"d/m/Y" }}</small>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="grupos-grid">
+            <!-- Tarjetas de grupos existentes -->
+            {% for grupo in grupos %}
+            <div class="grupo-card {% if grupo.activo %}active{% else %}inactive{% endif %}">
+                <div class="grupo-card-header">
+                    <i class="fas fa-users"></i>
+                    <span>{{ grupo.nombre }}</span>
+                </div>
+
+                <div class="grupo-card-body">
+                    <div class="grupo-info">
+                        <div class="grupo-info-item">
+                            <div class="grupo-info-label">
+                                <i class="fas fa-book"></i> Materia:
+                            </div>
+                            <div class="grupo-info-value">
+                                {{ grupo.materia_nombre|default:"Sin asignar" }}
+                            </div>
+                        </div>
+                        
+                        <div class="grupo-info-item">
+                            <div class="grupo-info-label">
+                                <i class="fas fa-calendar-alt"></i> Semestre:
+                            </div>
+                            <div class="grupo-info-value">
+                                {{ grupo.semestre_nombre|default:"Sin asignar" }}
+                            </div>
+                        </div>
+                        
+                        <div class="grupo-info-item">
+                            <div class="grupo-info-label">
+                                <i class="fas fa-clock"></i> Turno:
+                            </div>
+                            <div class="grupo-info-value">
+                                {% if grupo.turno %}
+                                <span class="turno-badge turno-{{ grupo.turno }}">
+                                    {{ grupo.turno|title }}
+                                </span>
+                                {% else %}
+                                No especificado
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if grupo.descripcion %}
+                        <div class="grupo-info-item">
+                            <div class="grupo-info-label">
+                                <i class="fas fa-align-left"></i> Descripción:
+                            </div>
+                            <div class="grupo-info-value">
+                                {{ grupo.descripcion|truncatechars:100 }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="grupo-info-item">
+                            <div class="grupo-info-label">
+                                <i class="fas fa-calendar"></i> Creado:
+                            </div>
+                            <div class="grupo-info-value">
+                                {{ grupo.fecha_creacion|default:"No especificado" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grupo-status">
+                        <span class="status-badge {% if grupo.activo %}status-active{% else %}status-inactive{% endif %}">
+                            <i class="fas fa-{% if grupo.activo %}check-circle{% else %}times-circle{% endif %}"></i>
+                            {% if grupo.activo %}Activo{% else %}Inactivo{% endif %}
+                        </span>
+                        
+                        {% if grupo.evaluacion_finalizada %}
+                        <span class="status-badge" style="background: #d4edda; color: #155724;">
+                            <i class="fas fa-check-square"></i> Evaluación finalizada
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="grupo-card-footer">
+                    <a href="{% url 'profesores:detalle_grupo' grupo.id %}" class="icon-btn ver" title="Ver detalles del grupo">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="#" class="icon-btn practicas" title="Ver prácticas del grupo">
+                        <i class="fas fa-flask"></i>
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: #6c757d; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 15px; border: 2px dashed #dee2e6;">
+                <i class="fas fa-users-slash" style="font-size: 64px; margin-bottom: 20px; color: #adb5bd;"></i>
+                <h3 style="color: #495057; margin-bottom: 15px;">No tienes grupos asignados</h3>
+                <p style="color: #6c757d; max-width: 500px; margin: 0 auto 20px; line-height: 1.5;">
+                    Actualmente no estás asignado a ningún grupo en el sistema.<br>
+                    Si crees que esto es un error, por favor contacta al administrador.
+                </p>
+                <a href="{% url 'profesores:profesores' %}" class="back-btn" style="display: inline-flex; margin-top: 20px;">
+                    <i class="fas fa-arrow-left"></i> Volver al Portal
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Información adicional -->
+        {% if grupos %}
+        <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 12px; border-left: 4px solid #9b59b6;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-info-circle" style="color: #9b59b6; font-size: 1.3rem;"></i>
+                <div>
+                    <p style="margin: 0; color: #495057; font-size: 0.95rem;">
+                        <strong>Nota:</strong> 
+                        {% if periodo_actual %}
+                            Mostrando grupos del período académico actual. 
+                        {% else %}
+                            No hay un período académico activo definido. Mostrando todos los grupos.
+                        {% endif %}
+                        Haz clic en <i class="fas fa-eye" style="color: #3498db;"></i> para acceder al detalle completo de cada grupo.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Auto-dismiss messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgs = document.querySelectorAll('.messages-container .message');
+            if (msgs.length) {
+                setTimeout(() => {
+                    msgs.forEach(m => m.classList.add('hide'));
+                    setTimeout(() => msgs.forEach(m => m.remove()), 600);
+                }, 5000);
+            }
+            
+            // Efecto de hover en las tarjetas
+            const grupoCards = document.querySelectorAll('.grupo-card');
+            grupoCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                    this.style.boxShadow = '0 20px 40px rgba(0, 59, 122, 0.2)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.08)';
+                });
+            });
+
+            // Efecto de animación al cargar las tarjetas
+            const cards = document.querySelectorAll('.grupo-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+
+        // Función para mostrar/ocultar loading
+        function showLoading(show) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            if (loadingOverlay) {
+                loadingOverlay.style.display = show ? 'flex' : 'none';
+            }
+        }
+
+        // Mostrar alertas personalizadas
+        function showAlert(message, type) {
+            // Remover alertas existentes
+            const existingAlerts = document.querySelectorAll('.alert:not(.messages-container .message)');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <div>${message}</div>
+            `;
+            
+            const container = document.querySelector('.grupos-container');
+            if (container) {
+                container.insertBefore(alertDiv, container.querySelector('.grupos-grid'));
+                
+                // Auto-remover después de 5 segundos
+                setTimeout(() => {
+                    alertDiv.style.opacity = '0';
+                    alertDiv.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => alertDiv.remove(), 500);
+                }, 5000);
+            }
+        }
+
+        // Validar que las fechas sean correctas
+        function validateDates(fechaInicio, fechaFin) {
+            if (fechaInicio && fechaFin) {
+                const inicio = new Date(fechaInicio);
+                const fin = new Date(fechaFin);
+                
+                if (inicio >= fin) {
+                    return 'La fecha de fin debe ser posterior a la fecha de inicio';
+                }
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>

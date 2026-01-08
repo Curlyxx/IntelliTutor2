@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Manrope',sans-serif;
+    font-family:'Inter',sans-serif;
 }
 
 body{
@@ -246,7 +246,7 @@ body{
    INPUTS
 =============================== */
 .form-group{
-    margin-bottom:16px;
+    margin-bottom:20px;
 }
 
 .form-label{
@@ -261,21 +261,26 @@ body{
 
 .input-icon{
     position:absolute;
-    left:10px;
+    left:12px;
     top:50%;
     transform:translateY(-50%);
     color:#003b7a;
     opacity:.75;
+    z-index:2;
+    pointer-events:none;
 }
 
 .form-control{
     width:100%;
     background:#f4f6fa;
     border:1px solid #dce1eb;
-    padding:12px 12px 12px 35px;
+    padding:14px 14px 14px 42px;
     border-radius:10px;
     color:#0b1736;
     transition:.2s;
+    position:relative;
+    font-size:14px;
+    min-height:48px;
 }
 
 .form-control:focus{
@@ -367,6 +372,87 @@ body{
 .alert-success{
     background:rgba(0,255,120,.15);
     color:#6affb2;
+}
+
+/* ===============================
+   TOOLTIPS PERSONALIZADOS
+=============================== */
+input[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #003b7a;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    pointer-events: none;
+}
+
+input[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #003b7a;
+    z-index: 1001;
+    pointer-events: none;
+}
+
+/* ===============================
+   MENSAJES DE ERROR
+=============================== */
+.error-message {
+    display: block;
+    color: #dc3545;
+    font-size: 11px;
+    margin-top: 4px;
+    margin-left: 42px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    height: 0;
+    overflow: hidden;
+}
+
+.error-message.show {
+    opacity: 1;
+    height: auto;
+    margin-top: 4px;
+}
+
+.form-control.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+/* ===============================
+   ALERTAS DINÁMICAS
+=============================== */
+.dynamic-alert {
+    margin-bottom: 15px;
+    animation: slideDown 0.3s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===============================

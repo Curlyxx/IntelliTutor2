@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zax&ek@4tw6v0*o=q=bg=&*rkvexz^1g++qo6+sr7&jsnv!7)3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -152,3 +152,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Google reCAPTCHA
+RECAPTCHA_SITE_KEY = '6LdAIOwrAAAAAOXhmUxMiQBxEOptAImGKVV9_8UG'
+RECAPTCHA_SECRET_KEY = '6LdAIOwrAAAAAIVtkd9BWTzBxGrLZAhGzkx8zF6F'

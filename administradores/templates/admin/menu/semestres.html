@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Semestres - IntelliTutor UNAM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+    <style>
+        .semestres-container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .semestres-header {
+    background: linear-gradient(135deg, #003b7a, #0b1736);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 59, 122, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .semestres-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .semestres-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .semestres-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .stats-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+        
+        .stats-badge:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        
+        .semestres-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .semestre-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid rgba(21, 87, 36, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .semestre-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #003b7a, #ffcc33);
+        }
+        
+        .semestre-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(21, 87, 36, 0.15);
+            border-color: rgba(0, 59, 122, 0.2);
+        }
+        
+        .semestre-card.active {
+            background: linear-gradient(145deg, #ffffff, #f0f9f1);
+        }
+        
+        .semestre-card.inactive {
+            opacity: 0.9;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+        }
+        
+        .create-card {
+            background: linear-gradient(135deg, #003b7a, #0b1736);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            min-height: 180px;
+            border: 2px dashed rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .create-card:hover {
+            background: linear-gradient(135deg, #004a94, #1a2b4a);
+            transform: scale(1.02);
+            box-shadow: 0 15px 35px rgba(21, 87, 36, 0.3);
+            border-color: rgba(255,255,255,0.4);
+        }
+        
+        .create-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: #ffcc33;
+        }
+        
+        .create-text {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .semestre-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .semestre-card-header i {
+            font-size: 20px;
+            color: #003b7a;
+            background: rgba(0, 59, 122, 0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+        
+        .semestre-card-header span {
+            font-size: 18px;
+            font-weight: 700;
+            color: #003b7a;
+            line-height: 1.3;
+        }
+        
+        .semestre-card-body {
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+        
+        .semestre-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .semestre-info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .semestre-info-item i {
+            color: #ffcc33;
+            width: 20px;
+        }
+        
+        .semestre-status {
+            background: rgba(0, 59, 122, 0.05);
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 59, 122, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-active {
+            background: #e7f3ff;  /* AZUL CLARO */
+            color: #003b7a;       /* AZUL UNAM */
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .semestre-card-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .icon-btn.edit {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .icon-btn.delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .icon-btn.toggle {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(135deg, #5a6268, #3d4349);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(108, 117, 125, 0.4);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: modalSlide 0.3s ease-out;
+        }
+        
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #003b7a, #0b1736);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        .modal-header h2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #003b7a;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #003b7a;
+            box-shadow: 0 0 0 3px rgba(0, 59, 122, 0.1);
+        }
+        
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-checkbox input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding: 20px 30px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            min-height: 18px;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #003b7a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .semestres-header {
+                padding: 30px 20px;
+            }
+            
+            .semestres-header h1 {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .semestres-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+            
+            .semestre-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM - Administrador</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'administradores:admin' %}"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="{% url 'administradores:usuarios' %}"><i class="fas fa-users"></i> <span>Usuarios</span></a></li>
+                <li><a href="{% url 'administradores:materias' %}"><i class="fas fa-book"></i> <span>Materias</span></a></li>
+                <li><a href="{% url 'administradores:grupos' %}"><i class="fas fa-users-cog"></i> <span>Grupos</span></a></li>
+                <li><a href="{% url 'administradores:semestres' %}" class="active"><i class="fas fa-calendar-alt"></i> <span>Semestres</span></a></li>
+                <li><a href="#"><i class="fas fa-clipboard-list"></i> <span>Solicitudes</span></a></li>
+                <div class="user-section">
+                    <ul class="user-menu">
+                        <li>
+                            <div class="profile-icon">
+                                <i class="fas fa-user-shield"></i>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Administrador
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="{% url 'login:logout' %}" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="semestres-container">
+        <a href="{% url 'administradores:admin' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver al Panel
+        </a>
+        
+        <div class="semestres-header">
+            <h1><i class="fas fa-calendar-alt"></i> Gestión de Semestres</h1>
+            <p><i class="fas fa-university"></i> Administra los períodos académicos del sistema IntelliTutor UNAM</p>
+            <div style="margin-top: 15px;">
+                <span class="stats-badge">
+                    <i class="fas fa-database"></i> Total de semestres: {{ semestres|length }}
+                </span>
+                {% if semestre_actual %}
+                <span class="stats-badge" style="margin-left: 10px;">
+                    <i class="fas fa-check-circle"></i> Semestre activo: {{ semestre_actual.nombre }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        <!-- En el HTML, después del div .semestres-header -->
+        <div class="info-section" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 15px; padding: 25px; margin-bottom: 30px; border-left: 5px solid #003b7a;">
+            <h3 style="color: #003b7a; margin-bottom: 15px;"><i class="fas fa-info-circle"></i> Información del Sistema</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h4 style="color: #003b7a; margin-bottom: 10px;"><i class="fas fa-calendar-plus"></i> Creación de Semestres</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #495057;">
+                        <li>Define períodos académicos para organizar los cursos</li>
+                        <li>Asigna fechas de inicio y fin del semestre</li>
+                        <li>Solo un semestre puede estar <strong>activo</strong> a la vez</li>
+                        <li>Los grupos se asocian a semestres específicos</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h4 style="color: #003b7a; margin-bottom: 10px;"><i class="fas fa-cogs"></i> Funcionamiento</h4>
+                    <ul style="margin: 0; padding-left: 20px; color: #495057;">
+                        <li>El semestre activo determina el período actual</li>
+                        <li>No se pueden eliminar semestres con grupos asociados</li>
+                        <li>Las fechas de inicio no pueden ser en el pasado</li>
+                        <li>La fecha de fin debe ser posterior a la de inicio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="semestres-grid">
+            <!-- Tarjeta para crear nuevo semestre -->
+            <div class="semestre-card create-card" onclick="openCreateModal()">
+                <i class="fas fa-plus create-icon"></i>
+                <div class="create-text">Crear Nuevo Semestre</div>
+            </div>
+
+            <!-- Tarjetas de semestres existentes -->
+            {% for semestre in semestres %}
+            <div class="semestre-card {% if semestre.activo %}active{% else %}inactive{% endif %}">
+                <div class="semestre-card-header">
+                    <i class="fas fa-calendar"></i>
+                    <span>{{ semestre.nombre }}</span>
+                </div>
+
+                <div class="semestre-card-body">
+                    <div class="semestre-info">
+                        <div class="semestre-info-item">
+                            <i class="fas fa-calendar-day"></i>
+                            <span><strong>Inicio:</strong> {{ semestre.fecha_inicio|date:"d/m/Y" }}</span>
+                        </div>
+                        <div class="semestre-info-item">
+                            <i class="fas fa-calendar-times"></i>
+                            <span><strong>Fin:</strong> {{ semestre.fecha_fin|date:"d/m/Y" }}</span>
+                        </div>
+                        <div class="semestre-info-item">
+                            <i class="fas fa-clock"></i>
+                            <span><strong>Creado:</strong> {{ semestre.fecha_creacion|date:"d/m/Y" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="semestre-status">
+                        <span class="status-badge {% if semestre.activo %}status-active{% else %}status-inactive{% endif %}">
+                            <i class="fas fa-{% if semestre.activo %}check-circle{% else %}times-circle{% endif %}"></i>
+                            {% if semestre.activo %}Activo{% else %}Inactivo{% endif %}
+                        </span>
+                        <span style="color: #6c757d; font-size: 12px;">
+                            <i class="fas fa-calendar-check"></i> {{ semestre.duracion_dias }} días
+                        </span>
+                    </div>
+                </div>
+
+                <div class="semestre-card-footer">
+                    <button
+                        class="icon-btn toggle"
+                        data-id="{{ semestre.id }}"
+                        data-activo="{{ semestre.activo }}"
+                        onclick="toggleSemestre(this)"
+                        title="{% if semestre.activo %}Desactivar semestre{% else %}Activar semestre{% endif %}">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                    <button
+                        class="icon-btn edit"
+                        data-id="{{ semestre.id }}"
+                        data-nombre="{{ semestre.nombre }}"
+                        data-fecha_inicio="{{ semestre.fecha_inicio|date:'Y-m-d' }}"
+                        data-fecha_fin="{{ semestre.fecha_fin|date:'Y-m-d' }}"
+                        onclick="handleEdit(this)"
+                        title="Editar semestre">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button
+                        class="icon-btn delete"
+                        data-id="{{ semestre.id }}"
+                        data-nombre="{{ semestre.nombre }}"
+                        onclick="handleDelete(this)"
+                        title="Eliminar semestre">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #6c757d;">
+                <i class="fas fa-calendar" style="font-size: 48px; margin-bottom: 10px;"></i>
+                <br>No hay semestres registrados. ¡Crea el primero!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Modal para crear/editar semestre -->
+    <div id="semestreModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"><i class="fas fa-calendar-alt"></i> Crear Nuevo Semestre</h2>
+            </div>
+            
+            <div class="modal-body">
+                <form id="semestreForm">
+                    <div class="form-group">
+                        <label class="form-label" for="nombre">Nombre del Semestre *</label>
+                        <input type="text" id="nombre" class="form-input" placeholder="Ej: 2024-1, Primavera 2024" maxlength="50">
+                        <div class="error-message" id="nombre_error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="fecha_inicio">Fecha de Inicio *</label>
+                        <input type="date" id="fecha_inicio" class="form-input">
+                        <div class="error-message" id="fecha_inicio_error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="fecha_fin">Fecha de Fin *</label>
+                        <input type="date" id="fecha_fin" class="form-input">
+                        <div class="error-message" id="fecha_fin_error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="activo">
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="activo">
+                                <span>Activar este semestre</span>
+                            </div>
+                        </label>
+                        <small style="display: block; color: #6c757d; margin-top: 5px;">
+                            Nota: Solo puede haber un semestre activo a la vez
+                        </small>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn btn-save" onclick="saveSemestre()" id="saveBtn">Crear Semestre</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Obtener el token CSRF
+    function getCSRFToken() {
+        const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfTokenElement) {
+            return csrfTokenElement.value;
+        }
+        const cookieValue = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+        return cookieValue || '';
+    }
+
+    // Variables globales
+    var isEditing = false;
+    var editingId = null;
+    var csrfToken = getCSRFToken();
+    
+    // URLs de las vistas Django (asumiendo que crearás estas vistas)
+    const CREATE_URL = "{% url 'administradores:crear_semestre' %}";
+    const UPDATE_URL = "{% url 'administradores:actualizar_semestre' %}";
+    const DELETE_URL = "{% url 'administradores:eliminar_semestre' %}";
+    const TOGGLE_URL = "{% url 'administradores:toggle_semestre' %}";
+
+    function openCreateModal() {
+        isEditing = false;
+        editingId = null;
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-calendar-alt"></i> Crear Nuevo Semestre';
+        document.getElementById('saveBtn').textContent = 'Crear Semestre';
+        
+        // Establecer fechas por defecto
+        const today = new Date().toISOString().split('T')[0];
+        const sixMonthsLater = new Date();
+        sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+        const futureDate = sixMonthsLater.toISOString().split('T')[0];
+        
+        document.getElementById('nombre').value = '';
+        document.getElementById('fecha_inicio').value = today;
+        document.getElementById('fecha_fin').value = futureDate;
+        document.getElementById('activo').checked = false;
+        
+        clearErrors();
+        document.getElementById('semestreModal').style.display = 'flex';
+    }
+    
+    function handleEdit(button) {
+        isEditing = true;
+        editingId = button.getAttribute('data-id');
+        document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Semestre';
+        document.getElementById('saveBtn').textContent = 'Actualizar Semestre';
+        
+        document.getElementById('nombre').value = button.getAttribute('data-nombre');
+        document.getElementById('fecha_inicio').value = button.getAttribute('data-fecha_inicio');
+        document.getElementById('fecha_fin').value = button.getAttribute('data-fecha_fin');
+        
+        clearErrors();
+        document.getElementById('semestreModal').style.display = 'flex';
+    }
+    
+    function closeModal() {
+        document.getElementById('semestreModal').style.display = 'none';
+    }
+    
+    function validateForm() {
+        var hasErrors = false;
+        clearErrors();
+        
+        var nombre = document.getElementById('nombre').value.trim();
+        var fechaInicio = document.getElementById('fecha_inicio').value;
+        var fechaFin = document.getElementById('fecha_fin').value;
+        
+        if (!nombre) {
+            showError('nombre_error', 'El nombre es obligatorio');
+            hasErrors = true;
+        } else if (nombre.length < 2) {
+            showError('nombre_error', 'El nombre debe tener al menos 2 caracteres');
+            hasErrors = true;
+        }
+        
+        if (!fechaInicio) {
+            showError('fecha_inicio_error', 'La fecha de inicio es obligatoria');
+            hasErrors = true;
+        }
+        
+        if (!fechaFin) {
+            showError('fecha_fin_error', 'La fecha de fin es obligatoria');
+            hasErrors = true;
+        }
+        
+        if (fechaInicio && fechaFin) {
+            const inicio = new Date(fechaInicio);
+            const fin = new Date(fechaFin);
+            
+            if (inicio >= fin) {
+                showError('fecha_fin_error', 'La fecha de fin debe ser posterior a la fecha de inicio');
+                hasErrors = true;
+            }
+            
+            // REMUEVE esta validación para permitir fechas pasadas al editar:
+            // const hoy = new Date();
+            // hoy.setHours(0, 0, 0, 0);
+            
+            // if (inicio < hoy) {
+            //     showError('fecha_inicio_error', 'La fecha de inicio no puede ser en el pasado');
+            //     hasErrors = true;
+            // }
+        }
+        
+        return !hasErrors;
+    }
+    
+    function showLoading(show) {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+    }
+    
+    async function saveSemestre() {
+        if (!validateForm()) {
+            return;
+        }
+        
+        var nombre = document.getElementById('nombre').value.trim();
+        var fechaInicio = document.getElementById('fecha_inicio').value;
+        var fechaFin = document.getElementById('fecha_fin').value;
+        var activo = document.getElementById('activo').checked;
+        
+        var url = isEditing ? UPDATE_URL : CREATE_URL;
+        var data = {
+            nombre: nombre,
+            fecha_inicio: fechaInicio,
+            fecha_fin: fechaFin,
+            activo: activo
+        };
+        
+        if (isEditing) {
+            data.semestre_id = parseInt(editingId);
+        }
+        
+        var saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Guardando...';
+        showLoading(true);
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(result.message, 'success');
+                setTimeout(function() { 
+                    window.location.reload(); 
+                }, 1500);
+            } else {
+                showAlert(result.message, 'error');
+                saveBtn.disabled = false;
+                saveBtn.textContent = isEditing ? 'Actualizar Semestre' : 'Crear Semestre';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('Error de conexión. Inténtalo de nuevo.', 'error');
+            saveBtn.disabled = false;
+            saveBtn.textContent = isEditing ? 'Actualizar Semestre' : 'Crear Semestre';
+        } finally {
+            showLoading(false);
+        }
+    }
+    
+    async function toggleSemestre(button) {
+        var semestreId = button.getAttribute('data-id');
+        var activo = button.getAttribute('data-activo') === 'True';
+        var accion = activo ? 'desactivar' : 'activar';
+        
+        if (!confirm(`¿Estás seguro de que deseas ${accion} este semestre?`)) {
+            return;
+        }
+        
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        showLoading(true);
+        
+        try {
+            const response = await fetch(TOGGLE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    semestre_id: parseInt(semestreId)
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(result.message, 'success');
+                setTimeout(function() { 
+                    window.location.reload(); 
+                }, 1500);
+            } else {
+                showAlert(result.message, 'error');
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-power-off"></i>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('Error de conexión. Inténtalo de nuevo.', 'error');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-power-off"></i>';
+        } finally {
+            showLoading(false);
+        }
+    }
+    
+    async function handleDelete(button) {
+        var semestreId = button.getAttribute('data-id');
+        var semestreNombre = button.getAttribute('data-nombre');
+        
+        if (!confirm(`¿Estás seguro de que deseas eliminar el semestre "${semestreNombre}"?`)) {
+            return;
+        }
+        
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        showLoading(true);
+        
+        try {
+            const response = await fetch(DELETE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    semestre_id: parseInt(semestreId)
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(result.message, 'success');
+                setTimeout(function() { 
+                    window.location.reload(); 
+                }, 1500);
+            } else {
+                showAlert(result.message, 'error');
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-trash"></i>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showAlert('Error de conexión. Inténtalo de nuevo.', 'error');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-trash"></i>';
+        } finally {
+            showLoading(false);
+        }
+    }
+    
+    function showError(elementId, message) {
+        var errorElement = document.getElementById(elementId);
+        errorElement.textContent = message;
+    }
+    
+    function clearErrors() {
+        var errors = document.querySelectorAll('.error-message');
+        errors.forEach(function(error) {
+            error.textContent = '';
+        });
+    }
+    
+    function showAlert(message, type) {
+        var existingAlerts = document.querySelectorAll('.alert');
+        existingAlerts.forEach(function(alert) { alert.remove(); });
+        
+        var alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-' + type;
+        alertDiv.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i> ' + message;
+        
+        var container = document.querySelector('.semestres-container');
+        container.insertBefore(alertDiv, container.querySelector('.semestres-header'));
+        
+        setTimeout(function() {
+            alertDiv.style.opacity = '0';
+            setTimeout(function() { alertDiv.remove(); }, 300);
+        }, 4000);
+    }
+    
+    // Cerrar modal al hacer clic fuera
+    window.onclick = function(event) {
+        var modal = document.getElementById('semestreModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+    
+    // Validación en tiempo real
+    document.getElementById('nombre')?.addEventListener('input', function() {
+        if (this.value.trim()) {
+            document.getElementById('nombre_error').textContent = '';
+        }
+    });
+    
+    document.getElementById('fecha_inicio')?.addEventListener('change', function() {
+        if (this.value) {
+            document.getElementById('fecha_inicio_error').textContent = '';
+        }
+    });
+    document.getElementById('fecha_fin')?.addEventListener('change', function() {
+    if (this.value) {
+        document.getElementById('fecha_fin_error').textContent = '';
+    }
+});
+
+// Validar fechas al cambiar
+document.getElementById('fecha_inicio')?.addEventListener('change', validateDates);
+document.getElementById('fecha_fin')?.addEventListener('change', validateDates);
+
+function validateDates() {
+    const fechaInicio = document.getElementById('fecha_inicio')?.value;
+    const fechaFin = document.getElementById('fecha_fin')?.value;
+    
+    if (fechaInicio && fechaFin) {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        
+        if (inicio >= fin) {
+            showError('fecha_fin_error', 'La fecha de fin debe ser posterior a la fecha de inicio');
+        } else {
+            document.getElementById('fecha_fin_error').textContent = '';
+        }
+        
+        // REMUEVE esta validación también:
+        // const hoy = new Date();
+        // hoy.setHours(0, 0, 0, 0);
+        
+        // if (inicio < hoy) {
+        //     showError('fecha_inicio_error', 'La fecha de inicio no puede ser en el pasado');
+        // } else {
+        //     document.getElementById('fecha_inicio_error').textContent = '';
+        // }
+    }
+}
+
+// Calcular duración automáticamente
+document.getElementById('fecha_inicio')?.addEventListener('change', calculateDuration);
+document.getElementById('fecha_fin')?.addEventListener('change', calculateDuration);
+
+function calculateDuration() {
+    const fechaInicio = document.getElementById('fecha_inicio')?.value;
+    const fechaFin = document.getElementById('fecha_fin')?.value;
+    
+    if (fechaInicio && fechaFin) {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const diffTime = Math.abs(fin - inicio);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Mostrar información de duración si existe un elemento para ello
+        const durationElement = document.getElementById('duration-info');
+        if (durationElement) {
+            durationElement.textContent = `Duración: ${diffDays} días`;
+        }
+    }
+}
+
+// Fecha mínima para fecha de inicio (hoy)
+// Cambia la función window.onload para remover la restricción de fechas mínimas:
+window.onload = function() {
+    // REMUEVE o comenta todo este bloque:
+    // const today = new Date().toISOString().split('T')[0];
+    // const fechaInicioInput = document.getElementById('fecha_inicio');
+    // if (fechaInicioInput) {
+    //     fechaInicioInput.min = today;
+        
+    //     // Si no tiene valor, establecer hoy como valor por defecto
+    //     if (!fechaInicioInput.value) {
+    //         fechaInicioInput.value = today;
+    //     }
+    // }
+    
+    // // Fecha mínima para fecha de fin (hoy + 1 día)
+    // const fechaFinInput = document.getElementById('fecha_fin');
+    // if (fechaFinInput) {
+    //     const tomorrow = new Date();
+    //     tomorrow.setDate(tomorrow.getDate() + 1);
+    //     fechaFinInput.min = tomorrow.toISOString().split('T')[0];
+        
+    //     // Si no tiene valor, establecer mañana como valor por defecto
+    //     if (!fechaFinInput.value) {
+    //         const nextWeek = new Date();
+    //         nextWeek.setDate(nextWeek.getDate() + 180); // 6 meses
+    //         fechaFinInput.value = nextWeek.toISOString().split('T')[0];
+    //     }
+    // }
+};
+</script>
+</body>
+</html>

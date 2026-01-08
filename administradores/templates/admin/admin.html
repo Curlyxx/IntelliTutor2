@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel de Administración - IntelliTutor UNAM{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'admin/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bloque para CSS adicional de páginas hijas -->
+    {% block extra_css %}
+    {% endblock %}
+</head>
+<body>
+    <!-- Mensajes de Django -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM - Administrador</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'administradores:admin' %}"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="{% url 'administradores:usuarios' %}"><i class="fas fa-users"></i> <span>Usuarios</span></a></li>
+                <li><a href="{% url 'administradores:materias' %}"><i class="fas fa-book"></i> <span>Materias</span></a></li>
+                <li><a href="{% url 'administradores:grupos' %}"><i class="fas fa-users-cog"></i> <span>Grupos</span></a></li>
+                <li><a href="{% url 'administradores:semestres' %}"><i class="fas fa-calendar-alt"></i> <span>Semestres</span></a></li>
+                <li><a href="#"><i class="fas fa-clipboard-list"></i> <span>Solicitudes</span></a></li>
+                <div class="user-section">
+                    <div class="profile-dropdown">
+                        <button type="button" class="profile-toggle" id="profileToggle" onclick="toggleProfileDropdown(event)">
+                            <div class="profile-icon">
+                                <div class="unam-badge">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Administrador
+                                    {% endif %}
+                                </span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                        </button>
+                        
+                        <div class="dropdown-menu unam-dropdown" id="profileDropdown">
+                            <div class="dropdown-header unam-header">
+                                <div class="user-info">
+                                    <div class="unam-avatar">
+                                        <!-- Imagen de perfil editable -->
+                                        <img src="{% static 'img/default-avatar.webp' %}" alt="Avatar" class="avatar-image" id="avatarImage">
+                                    </div>
+                                    <div class="user-details">
+                                        <strong class="user-fullname">
+                                            {% if user_name %}
+                                                {{ user_name }}
+                                            {% else %}
+                                                Administrador UNAM
+                                            {% endif %}
+                                        </strong>
+                                        <small class="user-email">
+                                            {{ request.session.email|default:"usuario@unam.mx" }}
+                                        </small>
+                                        <span class="unam-role">
+                                            <i class="fas fa-user-tag"></i>
+                                            {{ request.session.user_role|default:"Administrador" }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="dropdown-divider unam-divider"></div>
+                            
+                            <a href="{% url 'administradores:perfil_usuario' %}" class="dropdown-item unam-item">
+                                <div class="unam-item-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <div class="unam-item-content">
+                                    <span class="unam-item-title">Mi Perfil UNAM</span>
+                                    <span class="unam-item-desc">Ver y editar información personal</span>
+                                </div>
+                                <i class="fas fa-chevron-right unam-item-arrow"></i>
+                            </a>
+                            
+                            <div class="dropdown-divider unam-divider"></div>
+                            
+                            <a href="{% url 'administradores:cerrar_sesion' %}" class="dropdown-item unam-item logout">
+                                <div class="unam-item-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <div class="unam-item-content">
+                                    <span class="unam-item-title">Cerrar Sesión</span>
+                                    <span class="unam-item-desc">Salir del sistema</span>
+                                </div>
+                                <i class="fas fa-chevron-right unam-item-arrow"></i>
+                            </a>
+                            
+                            <div class="dropdown-footer unam-footer">
+                                <span class="unam-footer-text">Sistema Académico</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Bloque de contenido principal que las páginas hijas pueden sobreescribir -->
+    {% block content %}
+    <!-- Carousel -->
+    <div class="carousel-container">
+        <div class="carousel" id="carousel">
+            <div class="carousel-slide slide-1">
+                <div class="slide-content">
+                    <h2>Bienvenido a IntelliTutor UNAM</h2>
+                </div>
+            </div>
+            <div class="carousel-slide slide-2">
+                <div class="slide-content">
+                    <h2>Aprende a tu Ritmo</h2>
+                </div>
+            </div>
+            <div class="carousel-slide slide-3">
+                <div class="slide-content">
+                    <h2>Alcanza tus Metas</h2>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-buttons">
+            <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+            <div class="carousel-dot" onclick="goToSlide(1)"></div>
+            <div class="carousel-dot" onclick="goToSlide(2)"></div>
+        </div>
+    </div>
+
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h1>Panel de Administración</h1>
+        <p>Gestiona usuarios, instituciones y configuraciones del sistema IntelliTutor UNAM.</p>
+    </div>
+
+    <!-- Sections Title -->
+    <h2 class="sections-title">Herramientas de Administración</h2>
+
+    <!-- Sections Grid -->
+    <div class="sections-grid">
+        <div class="section-card">
+            <div class="section-image section-img-practicas"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Usuarios</h3>
+                <p>Administra estudiantes, profesores y otros administradores del sistema.</p>
+                <a href="{% url 'administradores:usuarios' %}" class="section-btn">
+                    Gestionar Usuarios <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-cursos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>Materias</h3>
+                <p>Configura y administra las materias disponibles en el sistema.</p>
+                <a href="{% url 'administradores:materias' %}" class="section-btn">
+                    Gestionar Materias <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-grupos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <h3>Grupos</h3>
+                <p>Organiza y administra los grupos de estudiantes por materia.</p>
+                <a href="{% url 'administradores:grupos' %}" class="section-btn">
+                    Gestionar Grupos <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-evaluaciones"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3>Semestres</h3>
+                <p>Administra períodos académicos y calendarios escolares.</p>
+                <a href="{% url 'administradores:semestres' %}" class="section-btn">
+                    Gestionar Semestres <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-image section-img-recursos"></div>
+            <div class="section-content">
+                <div class="section-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>Solicitudes</h3>
+                <p>Revisa y gestiona solicitudes de usuarios y permisos especiales.</p>
+                <button class="section-btn">
+                    Ver Solicitudes <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>IntelliTutor UNAM</h3>
+                    <p class="footer-desc">
+                        Plataforma educativa de la Universidad Nacional Autónoma de México para el desarrollo de prácticas y evaluaciones en línea.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Ayuda</a></li>
+                        <li><a href="#">Contacto</a></li>
+                        <li><a href="#">Sobre nosotros</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Aviso de Privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <div class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Universidad Nacional Autónoma de México. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bloque para JavaScript adicional -->
+    {% block extra_js %}
+    <script>
+        let currentSlide = 0;
+        const carousel = document.getElementById('carousel');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const totalSlides = 3;
+
+        function goToSlide(index) {
+            currentSlide = index;
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        // Auto-advance carousel every 4 seconds
+        setInterval(nextSlide, 4000);
+
+        // Auto-dismiss messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgs = document.querySelectorAll('.messages-container .message');
+            if (msgs.length) {
+                setTimeout(() => {
+                    msgs.forEach(m => m.classList.add('hide'));
+                    setTimeout(() => msgs.forEach(m => m.remove()), 600);
+                }, 5000);
+            }
+        });
+
+        // Variable global para controlar el estado del dropdown
+        let profileDropdownActive = false;
+
+        // Función para alternar el dropdown
+        function toggleProfileDropdown(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const profileDropdown = document.querySelector('.profile-dropdown');
+            
+            // Alternar estado
+            profileDropdownActive = !profileDropdownActive;
+            profileDropdown.classList.toggle('active');
+            
+            // Agregar o remover overlay
+            if (profileDropdownActive) {
+                const overlay = document.createElement('div');
+                overlay.className = 'dropdown-overlay';
+                overlay.id = 'dropdownOverlay';
+                overlay.addEventListener('click', closeProfileDropdown);
+                document.body.appendChild(overlay);
+                
+                setTimeout(() => {
+                    overlay.style.display = 'block';
+                }, 10);
+            } else {
+                closeProfileDropdown();
+            }
+        }
+
+        // Función para cerrar el dropdown
+        function closeProfileDropdown() {
+            const profileDropdown = document.querySelector('.profile-dropdown');
+            const overlay = document.getElementById('dropdownOverlay');
+            
+            profileDropdown.classList.remove('active');
+            profileDropdownActive = false;
+            
+            if (overlay) {
+                overlay.style.display = 'none';
+                setTimeout(() => {
+                    if (overlay.parentNode) {
+                        overlay.parentNode.removeChild(overlay);
+                    }
+                }, 300);
+            }
+        }
+
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(e) {
+                const profileDropdown = document.querySelector('.profile-dropdown');
+                const dropdownMenu = document.getElementById('profileDropdown');
+                const profileToggle = document.getElementById('profileToggle');
+                
+                if (profileDropdownActive && 
+                    !dropdownMenu.contains(e.target) && 
+                    !profileToggle.contains(e.target)) {
+                    closeProfileDropdown();
+                }
+            });
+            
+            // Cerrar al presionar ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && profileDropdownActive) {
+                    closeProfileDropdown();
+                }
+            });
+            
+            // Efecto hover mejorado para items
+            const items = document.querySelectorAll('.dropdown-item.unam-item');
+            items.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>
