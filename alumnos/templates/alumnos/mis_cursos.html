@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Cursos - IntelliTutor UNAM</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
+    <style>
+        .cursos-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .page-title h1 {
+            color: #003366;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-title p {
+            color: #666;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #003366;
+        }
+        
+        .stat-card.active {
+            border-left-color: #28a745;
+        }
+        
+        .stat-card.finished {
+            border-left-color: #6c757d;
+        }
+        
+        .stat-card.total {
+            border-left-color: #B8860B;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: #f0f8ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: #003366;
+        }
+        
+        .stat-card.active .stat-icon {
+            background: #d4edda;
+            color: #28a745;
+        }
+        
+        .stat-card.finished .stat-icon {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+        
+        .stat-card.total .stat-icon {
+            background: #fff3cd;
+            color: #B8860B;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #003366;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card.active .stat-number {
+            color: #28a745;
+        }
+        
+        .stat-card.finished .stat-number {
+            color: #6c757d;
+        }
+        
+        .stat-card.total .stat-number {
+            color: #B8860B;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h2 {
+            color: #003366;
+            font-size: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: #003366;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #004b8d;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #003366;
+            color: #003366;
+        }
+        
+        .btn-outline:hover {
+            background: #003366;
+            color: white;
+        }
+        
+        .cursos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .curso-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .curso-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 51, 102, 0.15);
+        }
+        
+        .curso-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #003366 0%, #004b8d 100%);
+            color: white;
+            position: relative;
+        }
+        
+        .curso-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .curso-status.active {
+            background: #28a745;
+            color: white;
+        }
+        
+        .curso-status.inactive {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .curso-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .curso-materia {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .curso-profesor {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .curso-content {
+            padding: 1.5rem;
+        }
+        
+        .curso-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .info-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .info-value {
+            font-size: 0.95rem;
+            color: #333;
+        }
+        
+        .curso-desc {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border-left: 3px solid #B8860B;
+        }
+        
+        .curso-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: #f0f8ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: #003366;
+        }
+        
+        .empty-state h3 {
+            color: #003366;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .disponibles-section {
+            background: #f0f8ff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 3rem;
+            border: 1px solid #e0f0ff;
+        }
+        
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .cursos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .curso-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .curso-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo-section">
+                <img src="{% static 'img/Escudo-UNAM-white.svg' %}" alt="UNAM" class="logo-unam">
+                <span class="brand-name">IntelliTutor UNAM</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'alumnos:alumnos' %}"><i class="fas fa-home"></i> <span>Inicio</span></a></li>
+                <li><a href="{% url 'alumnos:mis_cursos' %}" class="active"><i class="fas fa-book"></i> <span>Cursos</span></a></li>
+                <li><a href="#"><i class="fas fa-flask"></i> <span>Prácticas</span></a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> <span>Progreso</span></a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Mensajes -->
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Contenido Principal -->
+    <div class="cursos-container">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Mis Cursos</h1>
+                <p>Gestiona tus cursos activos y encuentra nuevos para inscribirte</p>
+            </div>
+            <a href="{% url 'alumnos:cursos_disponibles' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Buscar Nuevos Cursos
+            </a>
+        </div>
+        
+        <!-- Estadísticas -->
+        <div class="stats-cards">
+            <div class="stat-card total">
+                <div class="stat-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="stat-number">{{ total_cursos }}</div>
+                <div class="stat-label">Total de Cursos</div>
+            </div>
+            
+            <div class="stat-card active">
+                <div class="stat-icon">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="stat-number">{{ cursos_activos }}</div>
+                <div class="stat-label">Cursos Activos</div>
+            </div>
+            
+            <div class="stat-card finished">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number">{{ cursos_finalizados }}</div>
+                <div class="stat-label">Cursos Finalizados</div>
+            </div>
+        </div>
+        
+        <!-- Cursos Inscritos -->
+        <div class="section-header">
+            <h2>Mis Cursos Inscritos</h2>
+            <div class="section-actions">
+                <a href="{% url 'alumnos:cursos_disponibles' %}" class="btn btn-outline">
+                    <i class="fas fa-search"></i> Explorar Cursos
+                </a>
+            </div>
+        </div>
+        
+        {% if cursos %}
+            <div class="cursos-grid">
+                {% for curso in cursos %}
+                <div class="curso-card">
+                    <div class="curso-header">
+                        <div class="curso-status {% if curso.activo == 1 %}active{% else %}inactive{% endif %}">
+                            {% if curso.activo == 1 %}Activo{% else %}Finalizado{% endif %}
+                        </div>
+                        <div class="curso-title">{{ curso.grupo_nombre }}</div>
+                        <div class="curso-materia">{{ curso.materia_nombre }}</div>
+                        <div class="curso-profesor">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            {{ curso.profesor_nombre }}
+                        </div>
+                    </div>
+                    
+                    <div class="curso-content">
+                        <div class="curso-info">
+                            <div class="info-item">
+                                <span class="info-label">Semestre</span>
+                                <span class="info-value">{{ curso.semestre_nombre }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Créditos</span>
+                                <span class="info-value">{{ curso.creditos }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Turno</span>
+                                <span class="info-value">{{ curso.turno|title }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Inicio</span>
+                                <span class="info-value">{{ curso.fecha_inicio|date:"d/m/Y" }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if curso.grupo_descripcion %}
+                        <div class="curso-desc">
+                            {{ curso.grupo_descripcion|truncatewords:30 }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="curso-actions">
+                            <a href="{% url 'alumnos:detalle_curso' curso.grupo_id %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye"></i> Ver Detalles
+                            </a>
+                            <a href="{% url 'alumnos:abandonar_curso' curso.grupo_id %}" class="btn btn-outline btn-sm" 
+                               onclick="return confirm('¿Estás seguro de que quieres abandonar este curso?')">
+                                <i class="fas fa-sign-out-alt"></i> Abandonar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h3>No tienes cursos inscritos</h3>
+                <p>Actualmente no estás inscrito en ningún curso. Explora los cursos disponibles y únete a los que te interesen para comenzar tu aprendizaje.</p>
+                <a href="{% url 'alumnos:cursos_disponibles' %}" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Explorar Cursos Disponibles
+                </a>
+            </div>
+        {% endif %}
+        
+        <!-- Cursos Disponibles (Preview) -->
+        {% if materias_disponibles %}
+        <div class="disponibles-section">
+            <div class="section-header">
+                <h2>Cursos Disponibles</h2>
+                <a href="{% url 'alumnos:cursos_disponibles' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Ver Todos
+                </a>
+            </div>
+            
+            <p style="margin-bottom: 1.5rem; color: #666;">
+                Hay {{ materias_disponibles|length }} materias disponibles con grupos activos a los que puedes unirte.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+                {% for materia in materias_disponibles|slice:":6" %}
+                <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #B8860B;">
+                    <div style="font-weight: 600; color: #003366; margin-bottom: 0.5rem;">{{ materia.materia_nombre }}</div>
+                    <div style="font-size: 0.85rem; color: #666; margin-bottom: 0.5rem;">{{ materia.materia_descripcion|truncatewords:15 }}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem; color: #B8860B; font-weight: 600;">{{ materia.grupos_disponibles }} grupos</span>
+                        <a href="{% url 'alumnos:cursos_disponibles' %}#materia-{{ materia.materia_id }}" 
+                           style="font-size: 0.8rem; color: #003366; text-decoration: none; font-weight: 600;">
+                            Ver <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>IntelliTutor UNAM</h3>
+                    <p class="footer-desc">
+                        Plataforma educativa de la Universidad Nacional Autónoma de México para el desarrollo de prácticas y evaluaciones en línea.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'alumnos:alumnos' %}">Inicio</a></li>
+                        <li><a href="{% url 'alumnos:mis_cursos' %}">Mis Cursos</a></li>
+                        <li><a href="#">Prácticas</a></li>
+                        <li><a href="#">Progreso</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Políticas de Privacidad</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Aviso de Privacidad</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Síguenos</h3>
+                    <div class="social-icons">
+                        <div class="social-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-x-twitter"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <div class="social-icon">
+                            <i class="fab fa-linkedin-in"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 Universidad Nacional Autónoma de México. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación para las tarjetas de cursos
+            const cursoCards = document.querySelectorAll('.curso-card');
+            cursoCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Confirmación para abandonar curso
+            const abandonarLinks = document.querySelectorAll('a[href*="abandonar-curso"]');
+            abandonarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (!confirm('¿Estás seguro de que quieres abandonar este curso? Esta acción no se puede deshacer.')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
