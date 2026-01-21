@@ -537,25 +537,8 @@
                 <li><a href="{% url 'administradores:semestres' %}" class="active"><i class="fas fa-calendar-alt"></i> <span>Semestres</span></a></li>
                 <li><a href="#"><i class="fas fa-clipboard-list"></i> <span>Solicitudes</span></a></li>
                 <div class="user-section">
-                    <ul class="user-menu">
-                        <li>
-                            <div class="profile-icon">
-                                <i class="fas fa-user-shield"></i>
-                                <span class="user-name-badge">
-                                    {% if user_name %}
-                                        {{ user_name|truncatechars:15 }}
-                                    {% else %}
-                                        Administrador
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="{% url 'login:logout' %}" class="logout-btn">
-                                <i class="fas fa-sign-out-alt"></i> Salir
-                            </a>
-                        </li>
-                    </ul>
+                        {% include 'admin/includes/profile_dropdown.html' %}
+
                 </div>
             </ul>
         </nav>

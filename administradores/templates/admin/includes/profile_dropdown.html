@@ -1,0 +1,562 @@
+<!-- administradores/templates/admin/includes/profile_dropdown.html -->
+{% load static %}
+
+<!-- CSS específico del dropdown -->
+<style>
+    /* ===== COLORES UNAM ===== */
+    :root {
+        --unam-azul: #00356b;
+        --unam-azul-claro: #004b8d;
+        --unam-oro: #c69214;
+        --unam-oro-claro: #e6b22c;
+        --unam-gris: #f5f5f5;
+        --unam-gris-oscuro: #333333;
+        --unam-blanco: #ffffff;
+    }
+    
+    /* ===== ESTILOS DEL DROPDOWN ===== */
+    .mini-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--unam-blanco);
+        background: var(--unam-azul);
+    }
+    
+    /* Estructura del dropdown */
+    .profile-dropdown {
+        position: relative;
+        z-index: 1000;
+    }
+    
+    .profile-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-toggle:hover {
+        transform: translateY(-2px);
+    }
+    
+    .profile-icon {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 30px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .profile-toggle:hover .profile-icon {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .unam-badge {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--unam-oro);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--unam-azul);
+        font-size: 16px;
+    }
+    
+    .user-name-badge {
+        color: var(--unam-blanco);
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.3px;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .dropdown-arrow {
+        color: var(--unam-blanco);
+        font-size: 12px;
+        transition: transform 0.3s ease;
+    }
+    
+    .profile-dropdown.active .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+    
+    /* ===== MENÚ DROPDOWN ===== */
+    .dropdown-menu.unam-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 320px;
+        background: var(--unam-blanco);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 53, 107, 0.2);
+        border: 2px solid var(--unam-oro);
+        display: none;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1001;
+        overflow: hidden;
+    }
+    
+    .profile-dropdown.active .dropdown-menu {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    /* Header del dropdown */
+    .dropdown-header.unam-header {
+        background: linear-gradient(135deg, var(--unam-azul) 0%, var(--unam-azul-claro) 100%);
+        padding: 25px;
+        color: var(--unam-blanco);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .dropdown-header.unam-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        filter: blur(40px);
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .unam-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 3px solid var(--unam-blanco);
+        overflow: hidden;
+        background: var(--unam-oro);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .avatar-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .user-details {
+        flex: 1;
+    }
+    
+    .user-fullname {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        color: var(--unam-blanco);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .user-email {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+        display: block;
+        font-weight: 300;
+    }
+    
+    .unam-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(198, 146, 20, 0.2);
+        color: var(--unam-oro-claro);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .unam-role i {
+        font-size: 11px;
+    }
+    
+    /* Divisores */
+    .dropdown-divider.unam-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--unam-oro), transparent);
+        margin: 0;
+        border: none;
+        opacity: 0.5;
+    }
+    
+    /* Items del dropdown */
+    .dropdown-item.unam-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 16px 20px;
+        text-decoration: none;
+        color: var(--unam-gris-oscuro);
+        transition: all 0.3s ease;
+        position: relative;
+        border-bottom: 1px solid rgba(0, 53, 107, 0.05);
+    }
+    
+    .dropdown-item.unam-item:hover {
+        background: rgba(0, 53, 107, 0.05);
+        padding-left: 25px;
+    }
+    
+    .dropdown-item.unam-item.logout:hover {
+        background: rgba(220, 53, 69, 0.05);
+    }
+    
+    .unam-item-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--unam-azul) 0%, var(--unam-azul-claro) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--unam-blanco);
+        font-size: 16px;
+    }
+    
+    .dropdown-item.logout .unam-item-icon {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    }
+    
+    .unam-item-content {
+        flex: 1;
+    }
+    
+    .unam-item-title {
+        display: block;
+        font-weight: 600;
+        color: var(--unam-azul);
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    
+    .dropdown-item.logout .unam-item-title {
+        color: #dc3545;
+    }
+    
+    .unam-item-desc {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        line-height: 1.3;
+    }
+    
+    .unam-item-arrow {
+        color: var(--unam-oro);
+        font-size: 12px;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+    
+    .dropdown-item.unam-item:hover .unam-item-arrow {
+        opacity: 1;
+        transform: translateX(3px);
+    }
+    
+    /* Footer del dropdown */
+    .dropdown-footer.unam-footer {
+        padding: 15px 20px;
+        text-align: center;
+        background: var(--unam-gris);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .unam-footer-text {
+        font-size: 12px;
+        color: #666;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+    
+    /* ===== OVERLAY Y ANIMACIONES ===== */
+    .dropdown-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 999;
+        display: none;
+        animation: fadeIn 0.3s ease;
+        backdrop-filter: blur(2px);
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .profile-dropdown.active .dropdown-menu {
+        animation: slideInDown 0.3s ease;
+    }
+    
+    /* ===== HOVER EFFECTS ===== */
+    .dropdown-item.unam-item {
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    
+    .dropdown-item.unam-item:hover {
+        transform: translateX(5px);
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .dropdown-menu.unam-dropdown {
+            width: 280px;
+            right: 10px;
+        }
+        
+        .user-info {
+            flex-direction: column;
+            text-align: center;
+            gap: 12px;
+        }
+        
+        .user-details {
+            text-align: center;
+        }
+        
+        .user-fullname {
+            font-size: 16px;
+        }
+        
+        .user-email {
+            font-size: 12px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .profile-icon {
+            padding: 6px 12px;
+        }
+        
+        .user-name-badge {
+            max-width: 80px;
+            font-size: 12px;
+        }
+        
+        .dropdown-menu.unam-dropdown {
+            width: 250px;
+        }
+    }
+</style>
+
+<!-- HTML del dropdown. profile_dropdown.html -->
+<!-- HTML del dropdown. profile_dropdown.html -->
+<div class="profile-dropdown">
+    <button type="button" class="profile-toggle" id="profileToggle" onclick="toggleProfileDropdown(event)">
+        <div class="profile-icon">
+            <div class="unam-badge">
+                {% if usuario_actual and usuario_actual.icono_user %}
+                    <img src="/perfiles/{{ usuario_actual.icono_user|slice:'9:' }}" alt="Avatar" class="mini-avatar">
+                {% else %}
+                    <i class="fas fa-user-shield"></i>
+                {% endif %}
+            </div>
+            <span class="user-name-badge">
+                {% if usuario_actual and usuario_actual.nombre %}
+                    {{ usuario_actual.nombre|truncatechars:15 }}
+                {% else %}
+                    Administrador
+                {% endif %}
+            </span>
+            <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </div>
+    </button>
+    
+    <div class="dropdown-menu unam-dropdown" id="profileDropdown">
+        <div class="dropdown-header unam-header">
+            <div class="user-info">
+                <div class="unam-avatar">
+                    <!-- Imagen de perfil dinámica -->
+                    {% if usuario_actual and usuario_actual.icono_user %}
+                        <img src="/perfiles/{{ usuario_actual.icono_user|slice:'9:' }}" alt="Avatar" class="avatar-image" id="avatarImage">
+                    {% else %}
+                        <img src="{% static 'img/default-avatar.webp' %}" alt="Avatar" class="avatar-image" id="avatarImage">
+                    {% endif %}
+                </div>
+                <div class="user-details">
+                    <strong class="user-fullname">
+                        {% if usuario_actual and usuario_actual.nombre and usuario_actual.apellido %}
+                            {{ usuario_actual.nombre }} {{ usuario_actual.apellido }}
+                        {% elif usuario_actual and usuario_actual.nombre %}
+                            {{ usuario_actual.nombre }}
+                        {% else %}
+                            Administrador UNAM
+                        {% endif %}
+                    </strong>
+                    <small class="user-email">
+                        {% if usuario_actual and usuario_actual.email %}
+                            {{ usuario_actual.email }}
+                        {% else %}
+                            usuario@unam.mx
+                        {% endif %}
+                    </small>
+                    <span class="unam-role">
+                        <i class="fas fa-user-tag"></i>
+                        {% if usuario_actual and usuario_actual.rol %}
+                            {{ usuario_actual.rol }}
+                        {% else %}
+                            Administrador
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dropdown-divider unam-divider"></div>
+        
+        <a href="{% url 'administradores:perfil_usuario' %}" class="dropdown-item unam-item">
+            <div class="unam-item-icon">
+                <i class="fas fa-id-card"></i>
+            </div>
+            <div class="unam-item-content">
+                <span class="unam-item-title">Mi Perfil UNAM</span>
+                <span class="unam-item-desc">Ver y editar información personal</span>
+            </div>
+            <i class="fas fa-chevron-right unam-item-arrow"></i>
+        </a>
+        
+        <div class="dropdown-divider unam-divider"></div>
+        
+        <a href="{% url 'administradores:cerrar_sesion' %}" class="dropdown-item unam-item logout">
+            <div class="unam-item-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="unam-item-content">
+                <span class="unam-item-title">Cerrar Sesión</span>
+                <span class="unam-item-desc">Salir del sistema</span>
+            </div>
+            <i class="fas fa-chevron-right unam-item-arrow"></i>
+        </a>
+        
+        <div class="dropdown-footer unam-footer">
+            <span class="unam-footer-text">Sistema Académico UNAM</span>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript del dropdown -->
+<script>
+// Variable global para controlar el estado del dropdown
+let profileDropdownActive = false;
+
+// Función para alternar el dropdown
+function toggleProfileDropdown(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    
+    // Alternar estado
+    profileDropdownActive = !profileDropdownActive;
+    profileDropdown.classList.toggle('active');
+    
+    // Agregar o remover overlay
+    if (profileDropdownActive) {
+        const overlay = document.createElement('div');
+        overlay.className = 'dropdown-overlay';
+        overlay.id = 'dropdownOverlay';
+        overlay.addEventListener('click', closeProfileDropdown);
+        document.body.appendChild(overlay);
+        
+        setTimeout(() => {
+            overlay.style.display = 'block';
+        }, 10);
+    } else {
+        closeProfileDropdown();
+    }
+}
+
+// Función para cerrar el dropdown
+function closeProfileDropdown() {
+    const profileDropdown = document.querySelector('.profile-dropdown');
+    const overlay = document.getElementById('dropdownOverlay');
+    
+    profileDropdown.classList.remove('active');
+    profileDropdownActive = false;
+    
+    if (overlay) {
+        overlay.style.display = 'none';
+        setTimeout(() => {
+            if (overlay.parentNode) {
+                overlay.parentNode.removeChild(overlay);
+            }
+        }, 300);
+    }
+}
+
+// Inicializar el dropdown cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        const dropdownMenu = document.getElementById('profileDropdown');
+        const profileToggle = document.getElementById('profileToggle');
+        
+        if (profileDropdownActive && 
+            !dropdownMenu.contains(e.target) && 
+            !profileToggle.contains(e.target)) {
+            closeProfileDropdown();
+        }
+    });
+    
+    // Cerrar al presionar ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && profileDropdownActive) {
+            closeProfileDropdown();
+        }
+    });
+    
+    // Efecto hover mejorado para items
+    const items = document.querySelectorAll('.dropdown-item.unam-item');
+    items.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+});
+</script>

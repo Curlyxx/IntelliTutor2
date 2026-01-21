@@ -704,25 +704,8 @@
                 <li><a href="{% url 'administradores:semestres' %}"><i class="fas fa-calendar-alt"></i> <span>Semestres</span></a></li>
                 <li><a href="#"><i class="fas fa-clipboard-list"></i> <span>Solicitudes</span></a></li>
                 <div class="user-section">
-                    <ul class="user-menu">
-                        <li>
-                            <div class="profile-icon">
-                                <i class="fas fa-user-shield"></i>
-                                <span class="user-name-badge">
-                                    {% if user_name %}
-                                        {{ user_name|truncatechars:15 }}
-                                    {% else %}
-                                        Administrador
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </li>
-                        <li>
-                            <a href="{% url 'login:logout' %}" class="logout-btn">
-                                <i class="fas fa-sign-out-alt"></i> Salir
-                            </a>
-                        </li>
-                    </ul>
+                        {% include 'admin/includes/profile_dropdown.html' %}
+
                 </div>
             </ul>
         </nav>
@@ -798,6 +781,19 @@
                             </div>
                             <div class="grupo-info-value">
                                 {{ grupo.materia_nombre|default:"Sin asignar" }}
+                            </div>
+                        </div>
+
+                        <div class="grupo-info-item">
+                            <div class="grupo-info-label">
+                                <i class="fas fa-hashtag"></i> Código:
+                            </div>
+                            <div class="grupo-info-value">
+                                {% if grupo.codigo_clase %}
+                                    {{ grupo.codigo_clase }}
+                                {% else %}
+                                    <span style="color: #6c757d; font-style: italic;">Sin código</span>
+                                {% endif %}
                             </div>
                         </div>
                         
@@ -900,6 +896,7 @@
                         class="icon-btn edit"
                         data-id="{{ grupo.id }}"
                         data-nombre="{{ grupo.nombre }}"
+                        data-codigo_clase="{{ grupo.codigo_clase|default:'' }}"
                         data-descripcion="{{ grupo.descripcion|default:'' }}"
                         data-materia_id="{{ grupo.materia_id|default:'' }}"
                         data-semestre_id="{{ grupo.semestre_id|default:'' }}"
@@ -944,6 +941,14 @@
                         <label class="form-label" for="nombre">Nombre del Grupo *</label>
                         <input type="text" id="nombre" class="form-input" placeholder="Ej: Grupo A, Grupo 1, Sección 101" maxlength="100">
                         <div class="error-message" id="nombre_error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="codigo_clase">Código de Clase *</label>
+                        <input type="text" id="codigo_clase" class="form-input" 
+                            placeholder="Ej: MAT101-2025-1, FIS201-G1" 
+                            maxlength="20">
+                        <div class="error-message" id="codigo_clase_error"></div>
                     </div>
                     
                     <div class="form-group">
@@ -1063,6 +1068,7 @@
         
         // Limpiar formulario
         document.getElementById('nombre').value = '';
+        document.getElementById('codigo_clase').value = '';
         document.getElementById('descripcion').value = '';
         document.getElementById('materia_id').value = '';
         document.getElementById('semestre_id').value = '';
@@ -1084,6 +1090,7 @@
         
         // Llenar formulario con datos del grupo
         document.getElementById('nombre').value = button.getAttribute('data-nombre');
+        document.getElementById('codigo_clase').value = button.getAttribute('data-codigo_clase') || '';
         document.getElementById('descripcion').value = button.getAttribute('data-descripcion') || '';
         document.getElementById('materia_id').value = button.getAttribute('data-materia_id') || '';
         document.getElementById('semestre_id').value = button.getAttribute('data-semestre_id') || '';
@@ -1106,6 +1113,7 @@
         clearErrors();
         
         var nombre = document.getElementById('nombre').value.trim();
+        var codigoClase = document.getElementById('codigo_clase').value.trim();
         var materiaId = document.getElementById('materia_id').value;
         var semestreId = document.getElementById('semestre_id').value;
         var profesorId = document.getElementById('profesor_id').value;
@@ -1118,6 +1126,13 @@
             hasErrors = true;
         } else if (nombre.length < 2) {
             showError('nombre_error', 'El nombre debe tener al menos 2 caracteres');
+            hasErrors = true;
+        }
+        if (!codigoClase) {
+            showError('codigo_clase_error', 'El código de clase es obligatorio');
+            hasErrors = true;
+        } else if (codigoClase.length > 20) {
+            showError('codigo_clase_error', 'El código no puede exceder 20 caracteres');
             hasErrors = true;
         }
         
@@ -1167,6 +1182,7 @@
         }
         
         var nombre = document.getElementById('nombre').value.trim();
+        var codigoClase = document.getElementById('codigo_clase').value.trim();
         var descripcion = document.getElementById('descripcion').value.trim();
         var materiaId = document.getElementById('materia_id').value;
         var semestreId = document.getElementById('semestre_id').value;
@@ -1179,6 +1195,7 @@
         var url = isEditing ? UPDATE_URL : CREATE_URL;
         var data = {
             nombre: nombre,
+            codigo_clase: codigoClase,
             descripcion: descripcion,
             materia_id: parseInt(materiaId),
             semestre_id: parseInt(semestreId),
@@ -1376,6 +1393,12 @@
     document.getElementById('nombre')?.addEventListener('input', function() {
         if (this.value.trim()) {
             document.getElementById('nombre_error').textContent = '';
+        }
+    });
+
+    document.getElementById('codigo_clase')?.addEventListener('input', function() {
+        if (this.value.trim()) {
+            document.getElementById('codigo_clase_error').textContent = '';
         }
     });
     

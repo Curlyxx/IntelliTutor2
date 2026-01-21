@@ -6,446 +6,53 @@
 
 {% block extra_css %}
 {{ block.super }}
-<style>
-    /* ===== COLORES UNAM ===== */
-    :root {
-        --unam-azul: #00356b;
-        --unam-azul-claro: #004b8d;
-        --unam-oro: #c69214;
-        --unam-oro-claro: #e6b22c;
-        --unam-gris: #f5f5f5;
-        --unam-gris-oscuro: #333333;
-        --unam-blanco: #ffffff;
-    }
-    
-    /* ===== ESTILOS ESPECÍFICOS DEL PERFIL ===== */
-    .perfil-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        animation: fadeIn 0.5s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* ===== HEADER DEL PERFIL ===== */
-    .perfil-header {
-        background: linear-gradient(135deg, var(--unam-azul) 0%, var(--unam-azul-claro) 100%);
-        color: white;
-        padding: 40px 0;
-        text-align: center;
-        border-radius: 15px;
-        box-shadow: 0 4px 20px rgba(0, 53, 107, 0.2);
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 30px;
-    }
-    
-    .perfil-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 300px;
-        height: 300px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-    
-    .perfil-icon-grande {
-        font-size: 80px;
-        margin-bottom: 20px;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .perfil-titulo {
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .perfil-subtitulo {
-        font-size: 18px;
-        opacity: 0.9;
-        margin-bottom: 20px;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .role-badge {
-        display: inline-block;
-        padding: 8px 20px;
-        background: var(--unam-oro);
-        color: var(--unam-azul);
-        border-radius: 30px;
-        font-weight: 700;
-        font-size: 14px;
-        letter-spacing: 1px;
-        position: relative;
-        z-index: 1;
-    }
-    
-    /* ===== FORMULARIOS ===== */
-    .form-section {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        margin-bottom: 30px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 53, 107, 0.1);
-    }
-    
-    .section-title {
-        color: var(--unam-azul);
-        font-size: 22px;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid var(--unam-oro);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
-    
-    .section-title i {
-        color: var(--unam-oro);
-    }
-    
-    .edit-toggle {
-        background: var(--unam-azul);
-        color: white;
-        border: none;
-        padding: 10px 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 2px 8px rgba(0, 53, 107, 0.2);
-    }
-    
-    .edit-toggle:hover {
-        background: var(--unam-azul-claro);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 53, 107, 0.3);
-    }
-    
-    .edit-toggle:active {
-        transform: translateY(0);
-    }
-    
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-    }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-group label {
-        display: block;
-        color: var(--unam-azul);
-        font-weight: 600;
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
-    
-    .form-group input,
-    .form-group select {
-        width: 100%;
-        padding: 12px 15px;
-        border: 2px solid var(--unam-gris);
-        border-radius: 8px;
-        font-size: 14px;
-        transition: all 0.3s;
-        background: white;
-    }
-    
-    .form-group input:focus,
-    .form-group select:focus {
-        outline: none;
-        border-color: var(--unam-oro);
-        box-shadow: 0 0 0 3px rgba(198, 146, 20, 0.1);
-    }
-    
-    .form-group input:disabled,
-    .form-group select:disabled {
-        background: var(--unam-gris);
-        cursor: not-allowed;
-        opacity: 0.8;
-        border-color: #e0e0e0;
-    }
-    
-    .readonly-field {
-        background: var(--unam-gris);
-        padding: 12px 15px;
-        border-radius: 8px;
-        border: 2px solid var(--unam-gris);
-        font-size: 14px;
-        color: var(--unam-gris-oscuro);
-        min-height: 46px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .form-row {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-    
-    .form-row .form-group {
-        flex: 1;
-        margin-bottom: 0;
-    }
-    
-    /* ===== BOTONES ===== */
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 15px;
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid var(--unam-gris);
-    }
-    
-    .btn {
-        padding: 12px 25px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.3s;
-        border: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        text-decoration: none;
-    }
-    
-    .btn-save {
-        background: var(--unam-azul);
-        color: white;
-    }
-    
-    .btn-save:hover {
-        background: var(--unam-azul-claro);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 53, 107, 0.2);
-    }
-    
-    .btn-cancel {
-        background: var(--unam-gris);
-        color: var(--unam-gris-oscuro);
-    }
-    
-    .btn-cancel:hover {
-        background: #e0e0e0;
-        transform: translateY(-2px);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    }
-    
-    .btn-disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-    
-    .btn-disabled:hover {
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    
-    /* ===== MENSAJES ===== */
-    .message {
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        animation: slideIn 0.3s ease-out;
-    }
-    
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .message.success {
-        background: rgba(40, 167, 69, 0.1);
-        color: #28a745;
-        border: 1px solid rgba(40, 167, 69, 0.3);
-    }
-    
-    .message.error {
-        background: rgba(220, 53, 69, 0.1);
-        color: #dc3545;
-        border: 1px solid rgba(220, 53, 69, 0.3);
-    }
-    
-    .message i {
-        font-size: 16px;
-    }
-    
-    /* ===== ACCIONES ===== */
-    .acciones-section {
-        margin-bottom: 40px;
-    }
-    
-    .acciones-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-    }
-    
-    .accion-card {
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        border: 2px solid transparent;
-        height: 100%;
-    }
-    
-    .accion-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 53, 107, 0.15);
-        border-color: var(--unam-oro);
-    }
-    
-    .accion-header {
-        background: linear-gradient(135deg, var(--unam-azul) 0%, var(--unam-azul-claro) 100%);
-        padding: 25px;
-        text-align: center;
-        color: white;
-        min-height: 120px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .accion-icon {
-        font-size: 40px;
-        margin-bottom: 15px;
-        transition: transform 0.3s ease;
-    }
-    
-    .accion-card:hover .accion-icon {
-        transform: scale(1.2);
-    }
-    
-    .accion-header h3 {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0;
-    }
-    
-    .accion-body {
-        padding: 20px;
-        text-align: center;
-        background: var(--unam-gris);
-        min-height: 100px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .accion-body p {
-        color: #666;
-        font-size: 13px;
-        line-height: 1.5;
-        margin: 0;
-    }
-    
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-        .perfil-container {
-            padding: 15px;
-        }
-        
-        .perfil-header {
-            padding: 30px 20px;
-        }
-        
-        .perfil-titulo {
-            font-size: 26px;
-        }
-        
-        .perfil-icon-grande {
-            font-size: 60px;
-        }
-        
-        .section-title {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
-        }
-        
-        .edit-toggle {
-            align-self: flex-start;
-        }
-        
-        .form-row {
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .acciones-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .form-actions {
-            flex-direction: column;
-        }
-        
-        .btn {
-            width: 100%;
-            justify-content: center;
-        }
-    }
-</style>
+    <link rel="stylesheet" href="{% static 'admin/css/perfil_usuarios.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="perfil-container">
-    <!-- Header del perfil -->
-    <header class="perfil-header">
-        <div class="perfil-icon-grande">
-            <i class="fas fa-user-graduate"></i>
+
+        <!-- Contenedor para mensajes dinámicos (arriba a la derecha) -->
+    <div id="dynamicMessagesContainer" class="messages-container"></div>
+    
+    <!-- Mensajes de Django (si los hay) -->
+    {% if messages %}
+    <div id="djangoMessagesContainer" class="messages-container">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
+            <button class="message-close" onclick="this.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- Header del perfil -->
+    <!-- Header del perfil con Avatar -->
+    <header class="perfil-header">
+        <!-- Avatar Section -->
+        <div class="avatar-section">
+            <div class="user-avatar-container" onclick="document.getElementById('avatarInput').click()">
+                <div class="user-avatar">
+                    {% if usuario.icono_user %}
+                        <img src="/perfiles/{{ usuario.icono_user|slice:'9:' }}" alt="Avatar" id="avatarImage">
+                    {% else %}
+                        <img src="{% static 'img/default-avatar.webp' %}" alt="Avatar" id="avatarImage">
+                    {% endif %}
+                    <div class="avatar-upload-overlay">
+                        <i class="fas fa-camera"></i>
+                        <span>Cambiar foto</span>
+                    </div>
+                </div>
+            </div>
+            <input type="file" id="avatarInput" accept="image/jpeg,image/png,image/jpg" onchange="uploadAvatar(this)">
+            
+            <div class="avatar-name">{{ usuario.nombre }} {{ usuario.apellido }}</div>
+            <div class="avatar-email">{{ usuario.email }}</div>
+        </div>
+        
         <h1 class="perfil-titulo">Perfil de Usuario</h1>
         <p class="perfil-subtitulo">Sistema Académico UNAM</p>
         <span class="role-badge">
@@ -453,27 +60,24 @@
         </span>
     </header>
 
-    <!-- Mensajes de éxito/error -->
-    {% if messages %}
-    <div class="messages-container">
-        {% for message in messages %}
-        <div class="message {{ message.tags }}">
-            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
-            {{ message }}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    <!-- Formulario de información personal -->
+    <!-- Formulario de información personal con botón cancelar -->
     <section class="form-section">
-        <h2 class="section-title">
-            <i class="fas fa-user-circle"></i>
-            Información Personal
-            <button type="button" class="edit-toggle" onclick="toggleEdit('personalInfoForm')">
+         <h2 class="section-title">
+        <i class="fas fa-user-circle"></i>
+        <span class="section-title-text">Información Personal</span>
+        <div class="section-title-controls">
+            <button type="button" class="edit-toggle" id="editToggleBtn" onclick="toggleEdit('personalInfoForm', this)">
                 <i class="fas fa-edit"></i> Editar Información
             </button>
-        </h2>
+            <div class="action-buttons" id="actionButtons" style="display: none;">
+               
+                <button type="button" class="btn btn-save" onclick="submitForm('personalInfoForm')">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+            </div>
+        </div>
+    </h2>
         
         <form id="personalInfoForm" method="POST" action="{% url 'administradores:actualizar_perfil' %}">
             {% csrf_token %}
@@ -503,7 +107,7 @@
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
                     <input type="tel" id="telefono" name="telefono" value="{{ usuario.telefono }}" disabled 
-                           pattern="[0-9]{10}" title="Debe tener 10 dígitos">
+                        pattern="[0-9]{10}" title="Debe tener 10 dígitos">
                 </div>
                 
                 <div class="form-group">
@@ -516,7 +120,7 @@
             
             <div class="form-actions" id="personalInfoActions" style="display: none;">
                 <button type="button" class="btn btn-cancel" onclick="cancelEdit('personalInfoForm')">
-                    <i class="fas fa-times"></i> Cancelar
+                    <i class="fas fa-times"></i> Cancelar Cambios
                 </button>
                 <button type="button" class="btn btn-save" onclick="submitForm('personalInfoForm')">
                     <i class="fas fa-save"></i> Guardar Cambios
@@ -525,7 +129,7 @@
         </form>
     </section>
 
-    <!-- Formulario de contraseña -->
+    <!-- Formulario de contraseña con iconos de visibilidad -->
     <section class="form-section">
         <h2 class="section-title">
             <i class="fas fa-lock"></i>
@@ -537,25 +141,31 @@
             <input type="hidden" name="user_id" value="{{ usuario.id }}">
             
             <div class="form-grid">
-                <div class="form-group">
+                <div class="form-group password-input-group">
                     <label for="nueva_password">Nueva Contraseña</label>
                     <input type="password" id="nueva_password" name="nueva_password" 
-                           placeholder="Ingrese nueva contraseña" required>
+                        placeholder="Ingrese nueva contraseña" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('nueva_password', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
                     <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
                         <i class="fas fa-info-circle"></i> Mínimo 8 caracteres
                     </small>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group password-input-group">
                     <label for="confirmar_password">Confirmar Contraseña</label>
                     <input type="password" id="confirmar_password" name="confirmar_password" 
-                           placeholder="Confirme la nueva contraseña" required>
+                        placeholder="Confirme la nueva contraseña" required>
+                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmar_password', this)">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
             </div>
             
             <div class="form-actions">
                 <button type="button" class="btn btn-cancel" onclick="resetPasswordForm()">
-                    <i class="fas fa-times"></i> Cancelar
+                    <i class="fas fa-times"></i> Limpiar Campos
                 </button>
                 <button type="button" class="btn btn-save" onclick="submitPasswordForm()">
                     <i class="fas fa-key"></i> Cambiar Contraseña
@@ -592,7 +202,7 @@
                 <label>Institución</label>
                 <div class="readonly-field">
                     <i class="fas fa-university" style="margin-right: 8px; color: var(--unam-azul);"></i>
-                    Universidad Nacional Autónoma de México
+                    Facultad de Estudios Superiores Cuatitlán
                 </div>
             </div>
             
@@ -637,37 +247,39 @@
 let originalValues = {};
 
 // Función para alternar edición de formularios
-function toggleEdit(formId) {
+function toggleEdit(formId, button) {
     const form = document.getElementById(formId);
     const inputs = form.querySelectorAll('input:not([type="hidden"])');
-    const actions = document.getElementById(formId + 'Actions');
+    const actionButtons = document.getElementById('actionButtons');
     
     if (!form.dataset.editing || form.dataset.editing === 'false') {
         // Activar edición
         originalValues[formId] = {};
         inputs.forEach(input => {
-            originalValues[formId][input.id] = input.value;
-            input.disabled = false;
-            input.style.backgroundColor = 'white';
+            // Habilitar TODOS los campos editables excepto el de número de cuenta
+            if (input.id !== 'numero_cuenta') {
+                originalValues[formId][input.id] = input.value;
+                input.disabled = false;
+                input.style.backgroundColor = 'white';
+                input.style.borderColor = 'var(--unam-oro)';
+                input.style.boxShadow = '0 0 0 3px rgba(198, 146, 20, 0.1)';
+            }
         });
         
-        if (actions) {
-            actions.style.display = 'flex';
+        // Cambiar texto del botón de editar
+        button.innerHTML = '<i class="fas fa-times"></i> Cancelar Edición';
+        button.classList.add('active');
+        
+        // Mostrar botones de acción
+        if (actionButtons) {
+            actionButtons.style.display = 'flex';
+            actionButtons.style.animation = 'slideIn 0.3s ease-out';
         }
         
         form.dataset.editing = 'true';
     } else {
         // Desactivar edición
-        inputs.forEach(input => {
-            input.disabled = true;
-            input.style.backgroundColor = '';
-        });
-        
-        if (actions) {
-            actions.style.display = 'none';
-        }
-        
-        form.dataset.editing = 'false';
+        cancelEdit(formId);
     }
 }
 
@@ -675,7 +287,8 @@ function toggleEdit(formId) {
 function cancelEdit(formId) {
     const form = document.getElementById(formId);
     const inputs = form.querySelectorAll('input:not([type="hidden"])');
-    const actions = document.getElementById(formId + 'Actions');
+    const editButton = document.getElementById('editToggleBtn');
+    const actionButtons = document.getElementById('actionButtons');
     
     if (originalValues[formId]) {
         inputs.forEach(input => {
@@ -684,11 +297,20 @@ function cancelEdit(formId) {
             }
             input.disabled = true;
             input.style.backgroundColor = '';
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
         });
     }
     
-    if (actions) {
-        actions.style.display = 'none';
+    // Restaurar botón de editar
+    if (editButton) {
+        editButton.innerHTML = '<i class="fas fa-edit"></i> Editar Información';
+        editButton.classList.remove('active');
+    }
+    
+    // Ocultar botones de acción
+    if (actionButtons) {
+        actionButtons.style.display = 'none';
     }
     
     form.dataset.editing = 'false';
@@ -719,8 +341,221 @@ function submitForm(formId) {
         return;
     }
     
-    if (confirm('¿Está seguro de que desea guardar los cambios?')) {
+    // Validar que se haya hecho algún cambio
+    const hasChanges = Object.keys(originalValues[formId] || {}).some(key => {
+        const input = form.querySelector(`#${key}`);
+        return input && input.value !== originalValues[formId][key];
+    });
+    
+    if (!hasChanges) {
+        alert('No se detectaron cambios para guardar.');
+        return;
+    }
+    
+    // Confirmar antes de enviar
+    if (confirm('¿Está seguro de que desea guardar los cambios en su información personal?')) {
+        // Deshabilitar botones mientras se procesa
+        const editButton = document.getElementById('editToggleBtn');
+        const actionButtons = document.getElementById('actionButtons');
+        
+        if (editButton) editButton.disabled = true;
+        if (actionButtons) {
+            const saveBtn = actionButtons.querySelector('.btn-save');
+            const cancelBtn = actionButtons.querySelector('.btn-cancel');
+            if (saveBtn) saveBtn.disabled = true;
+            if (cancelBtn) cancelBtn.disabled = true;
+        }
+        
+        // Enviar formulario
         form.submit();
+    }
+}
+
+// Inicialización cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Perfil de usuario cargado');
+});
+</script>
+
+
+
+<script>
+function uploadAvatar(input) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        
+        // Validar tipo de archivo
+        if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+            alert('Solo se permiten imágenes JPG, JPEG o PNG');
+            return;
+        }
+        
+        // Validar tamaño (máximo 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('La imagen no debe superar 2MB');
+            return;
+        }
+        
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('user_id', '{{ usuario.id }}');
+        
+        // Mostrar loading
+        const avatarContainer = document.querySelector('.user-avatar');
+        const originalContent = avatarContainer.innerHTML;
+        avatarContainer.innerHTML = '<i class="fas fa-spinner fa-spin" style="font-size: 40px; color: white;"></i>';
+        
+        fetch('{% url "administradores:subir_avatar" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar mensaje de éxito
+                showMessage('Imagen de perfil actualizada exitosamente.', 'success');
+                
+                // Refrescar la página después de 1.5 segundos
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1200);
+            } else {
+                avatarContainer.innerHTML = originalContent;
+                showMessage(data.message || 'Error al subir la imagen', 'error');
+            }
+        })
+        .catch(error => {
+            avatarContainer.innerHTML = originalContent;
+            showMessage('Error de conexión. Inténtalo de nuevo.', 'error');
+            console.error('Error:', error);
+        });
+    }
+}
+
+function showMessage(message, type = 'info', duration = 5000) {
+    // Crear contenedor si no existe
+    let messagesContainer = document.getElementById('dynamicMessagesContainer');
+    if (!messagesContainer) {
+        messagesContainer = document.createElement('div');
+        messagesContainer.id = 'dynamicMessagesContainer';
+        messagesContainer.className = 'messages-container';
+        document.querySelector('.perfil-container').prepend(messagesContainer);
+    }
+    
+    // Crear elemento del mensaje
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+        <button class="message-close" onclick="this.parentElement.remove()">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Añadir al contenedor
+    messagesContainer.appendChild(messageDiv);
+    
+    // Animación de entrada
+    setTimeout(() => {
+        messageDiv.style.opacity = '1';
+    }, 10);
+    
+    // Auto-eliminar después del tiempo especificado
+    if (duration > 0) {
+        setTimeout(() => {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateX(100px)';
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 300);
+        }, duration);
+    }
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    // contraseñas:
+
+    // ===== FUNCIONES PARA EL FORMULARIO DE CONTRASEÑA =====
+
+// Función para alternar visibilidad de contraseña
+function togglePasswordVisibility(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+        button.setAttribute('title', 'Ocultar contraseña');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+        button.setAttribute('title', 'Mostrar contraseña');
+    }
+    
+    // Enfocar el input después de cambiar el tipo
+    input.focus();
+}
+
+// Función para limpiar campos del formulario de contraseña
+function resetPasswordForm() {
+    const nuevaPassword = document.getElementById('nueva_password');
+    const confirmarPassword = document.getElementById('confirmar_password');
+    
+    // Limpiar valores
+    nuevaPassword.value = '';
+    confirmarPassword.value = '';
+    
+    // Resetear estilos de validación
+    nuevaPassword.style.borderColor = '';
+    nuevaPassword.style.boxShadow = '';
+    confirmarPassword.style.borderColor = '';
+    confirmarPassword.style.boxShadow = '';
+    
+    // Restablecer iconos de visibilidad a "ojo cerrado"
+    const toggleButtons = document.querySelectorAll('.password-toggle');
+    toggleButtons.forEach(button => {
+        const icon = button.querySelector('i');
+        // Extraer el inputId del atributo onclick
+        const onclickAttr = button.getAttribute('onclick');
+        const match = onclickAttr.match(/'([^']+)'/);
+        if (match) {
+            const inputId = match[1];
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                button.setAttribute('title', 'Mostrar contraseña');
+            }
+        }
+    });
+    
+    // Mostrar confirmación
+    if (confirm('¿Está seguro de que desea limpiar todos los campos de contraseña?')) {
+        // Enfocar el primer campo
+        nuevaPassword.focus();
     }
 }
 
@@ -731,80 +566,182 @@ function submitPasswordForm() {
     const confirmarPassword = document.getElementById('confirmar_password');
     
     // Validaciones
+    if (!nuevaPassword.value.trim() || !confirmarPassword.value.trim()) {
+        alert('Ambos campos de contraseña son obligatorios.');
+        nuevaPassword.focus();
+        return;
+    }
+    
     if (nuevaPassword.value.length < 8) {
         alert('La contraseña debe tener al menos 8 caracteres.');
         nuevaPassword.focus();
         return;
     }
     
+    // Validar caracteres especiales (opcional)
+    const tieneMayuscula = /[A-Z]/.test(nuevaPassword.value);
+    const tieneMinuscula = /[a-z]/.test(nuevaPassword.value);
+    const tieneNumero = /[0-9]/.test(nuevaPassword.value);
+    
+    if (!tieneMayuscula || !tieneMinuscula || !tieneNumero) {
+        alert('Para mayor seguridad, la contraseña debe contener:\n• Al menos una letra mayúscula\n• Al menos una letra minúscula\n• Al menos un número');
+        nuevaPassword.focus();
+        return;
+    }
+    
     if (nuevaPassword.value !== confirmarPassword.value) {
-        alert('Las contraseñas no coinciden.');
+        alert('Las contraseñas no coinciden. Por favor, verifique que ambas contraseñas sean iguales.');
         confirmarPassword.focus();
         return;
     }
     
-    if (confirm('¿Está seguro de que desea cambiar su contraseña?')) {
+    // Confirmar antes de enviar
+    if (confirm('¿Está seguro de que desea cambiar su contraseña?\n\nEsta acción no se puede deshacer.')) {
+        // Deshabilitar botones mientras se procesa
+        const cancelBtn = form.querySelector('.btn-cancel');
+        const saveBtn = form.querySelector('.btn-save');
+        
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cambiando...';
+        }
+        if (cancelBtn) cancelBtn.disabled = true;
+        
+        // Enviar formulario
         form.submit();
     }
 }
 
-// Función para resetear formulario de contraseña
-function resetPasswordForm() {
-    const form = document.getElementById('passwordForm');
+// Validación en tiempo real para coincidencia de contraseñas
+function setupPasswordValidation() {
     const nuevaPassword = document.getElementById('nueva_password');
     const confirmarPassword = document.getElementById('confirmar_password');
     
-    nuevaPassword.value = '';
-    confirmarPassword.value = '';
-    confirmarPassword.style.borderColor = '';
-}
-
-// Validación en tiempo real para coincidencia de contraseñas
-document.addEventListener('DOMContentLoaded', function() {
-    const nuevaPassword = document.getElementById('nueva_password');
-    const confirmarPassword = document.getElementById('confirmar_password');
+    if (!nuevaPassword || !confirmarPassword) return;
     
     function validatePasswordMatch() {
         if (nuevaPassword.value && confirmarPassword.value) {
             if (nuevaPassword.value !== confirmarPassword.value) {
                 confirmarPassword.style.borderColor = '#dc3545';
+                confirmarPassword.style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.1)';
             } else {
                 confirmarPassword.style.borderColor = '#28a745';
+                confirmarPassword.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
             }
         } else {
             confirmarPassword.style.borderColor = '';
+            confirmarPassword.style.boxShadow = '';
+        }
+        
+        // Validar fortaleza de contraseña
+        if (nuevaPassword.value.length > 0) {
+            if (nuevaPassword.value.length < 8) {
+                nuevaPassword.style.borderColor = '#dc3545';
+                nuevaPassword.style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.1)';
+            } else {
+                nuevaPassword.style.borderColor = '#28a745';
+                nuevaPassword.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+            }
+        } else {
+            nuevaPassword.style.borderColor = '';
+            nuevaPassword.style.boxShadow = '';
         }
     }
     
-    if (nuevaPassword && confirmarPassword) {
-        nuevaPassword.addEventListener('input', validatePasswordMatch);
-        confirmarPassword.addEventListener('input', validatePasswordMatch);
+    // Agregar event listeners
+    nuevaPassword.addEventListener('input', validatePasswordMatch);
+    confirmarPassword.addEventListener('input', validatePasswordMatch);
+    
+    // Agregar event listener para Enter key
+    nuevaPassword.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            confirmarPassword.focus();
+        }
+    });
+    
+    confirmarPassword.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            submitPasswordForm();
+        }
+    });
+}
+
+// Función para añadir tooltips a los botones de visibilidad
+function setupPasswordTooltips() {
+    const toggleButtons = document.querySelectorAll('.password-toggle');
+    toggleButtons.forEach(button => {
+        button.setAttribute('title', 'Mostrar contraseña');
+        
+        // Añadir evento mouseover para tooltip
+        button.addEventListener('mouseover', function() {
+            this.style.cursor = 'pointer';
+        });
+    });
+}
+
+// Inicialización cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar validación de contraseñas
+    setupPasswordValidation();
+    
+    // Configurar tooltips para botones de visibilidad
+    setupPasswordTooltips();
+    
+    console.log('Módulo de contraseñas cargado');
+});
+
+// ===== FUNCIÓN AUXILIAR PARA MOSTRAR MENSAJES (opcional) =====
+function showPasswordMessage(message, type = 'info') {
+    // Eliminar mensajes anteriores
+    const existingMessages = document.querySelectorAll('.password-message');
+    existingMessages.forEach(msg => msg.remove());
+    
+    // Crear mensaje
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `password-message ${type}`;
+    messageDiv.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        ${message}
+    `;
+    
+    // Estilos básicos
+    messageDiv.style.padding = '10px 15px';
+    messageDiv.style.borderRadius = '5px';
+    messageDiv.style.margin = '10px 0';
+    messageDiv.style.display = 'flex';
+    messageDiv.style.alignItems = 'center';
+    messageDiv.style.gap = '10px';
+    messageDiv.style.fontSize = '14px';
+    
+    if (type === 'success') {
+        messageDiv.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+        messageDiv.style.color = '#28a745';
+        messageDiv.style.border = '1px solid rgba(40, 167, 69, 0.3)';
+    } else {
+        messageDiv.style.backgroundColor = 'rgba(220, 53, 69, 0.1)';
+        messageDiv.style.color = '#dc3545';
+        messageDiv.style.border = '1px solid rgba(220, 53, 69, 0.3)';
     }
     
-    // Efectos para las tarjetas de acción
-    const cards = document.querySelectorAll('.accion-card');
-    cards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            const icon = this.querySelector('.accion-icon i');
-            icon.style.filter = 'drop-shadow(0 0 8px rgba(255, 215, 0, 0.5))';
-        });
+    // Insertar después del formulario de contraseña
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.parentNode.insertBefore(messageDiv, passwordForm.nextSibling);
         
-        card.addEventListener('mouseleave', function() {
-            const icon = this.querySelector('.accion-icon i');
-            icon.style.filter = 'none';
-        });
-    });
-    
-    // Prevenir envío de formularios con Enter
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && e.target.type !== 'textarea') {
-                e.preventDefault();
-            }
-        });
-    });
-    
-    console.log('Perfil de usuario cargado');
-});
+        // Auto-eliminar después de 5 segundos
+        setTimeout(() => {
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transition = 'opacity 0.3s';
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 300);
+        }, 5000);
+    }
+}
 </script>
+
 {% endblock %}

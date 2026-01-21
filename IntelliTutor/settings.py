@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'administradores.context_processors.usuario_context',  # ← Esta línea
             ],
         },
     },
@@ -147,6 +148,7 @@ STATICFILES_DIRS = [
 # Archivos media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+PERFILES_ROOT = os.path.join(BASE_DIR, 'Perfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

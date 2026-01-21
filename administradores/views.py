@@ -549,6 +549,7 @@ def grupos(request):
             SELECT 
                 g.id,
                 g.nombre,
+                g.codigo_clase,  -- ← AGREGAR ESTA LÍNEA
                 g.descripcion,
                 g.turno,
                 g.fecha_inicio,
@@ -593,7 +594,7 @@ def grupos(request):
         'materias': materias,
         'semestres': semestres,
         'profesores': profesores,
-        'user_name': username  # ← AGREGAR ESTA LÍNEA
+        'user_name': username
     })
 
 @require_admin
@@ -603,6 +604,7 @@ def crear_grupo(request):
         try:
             data = json.loads(request.body)
             nombre = data.get('nombre', '').strip()
+            codigo_clase = data.get('codigo_clase', '').strip()
             descripcion = data.get('descripcion', '').strip()
             materia_id = data.get('materia_id')
             semestre_id = data.get('semestre_id')
@@ -615,6 +617,12 @@ def crear_grupo(request):
             # Validaciones
             if not all([nombre, materia_id, semestre_id, profesor_id, turno]):
                 return JsonResponse({'success': False, 'message': 'Nombre, materia, semestre, profesor y turno son obligatorios'})
+            
+            if not codigo_clase:
+                return JsonResponse({'success': False, 'message': 'El código de clase es obligatorio'})
+
+            if len(codigo_clase) > 20:
+                return JsonResponse({'success': False, 'message': 'El código de clase no puede exceder 20 caracteres'})
             
             # Validar fechas si están presentes
             fecha_inicio_dt = None
@@ -636,26 +644,27 @@ def crear_grupo(request):
                 return JsonResponse({'success': False, 'message': 'La fecha de fin debe ser posterior a la fecha de inicio'})
             
             with connection.cursor() as cursor:
-                # Verificar si ya existe un grupo con ese nombre en el mismo semestre
+                # Verificar si ya existe un grupo con ese nombre o código en el mismo semestre
                 cursor.execute("""
                     SELECT id FROM grupos 
-                    WHERE nombre = %s AND semestre_id = %s
-                """, [nombre, semestre_id])
+                    WHERE (nombre = %s OR codigo_clase = %s) AND semestre_id = %s
+                """, [nombre, codigo_clase, semestre_id])
                 
                 if cursor.fetchone():
                     return JsonResponse({
                         'success': False, 
-                        'message': 'Ya existe un grupo con ese nombre en este semestre'
+                        'message': 'Ya existe un grupo con ese nombre o código en este semestre'
                     })
                 
                 # Insertar nuevo grupo
                 cursor.execute("""
                     INSERT INTO grupos 
-                    (nombre, descripcion, materia_id, semestre_id, profesor_id, 
+                    (nombre, codigo_clase, descripcion, materia_id, semestre_id, profesor_id, 
                      turno, fecha_inicio, fecha_fin, activo) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, [
                     nombre, 
+                    codigo_clase,
                     descripcion if descripcion else None,
                     materia_id,
                     semestre_id,
@@ -681,6 +690,7 @@ def actualizar_grupo(request):
             data = json.loads(request.body)
             grupo_id = data.get('grupo_id')
             nombre = data.get('nombre', '').strip()
+            codigo_clase = data.get('codigo_clase', '').strip()
             descripcion = data.get('descripcion', '').strip()
             materia_id = data.get('materia_id')
             semestre_id = data.get('semestre_id')
@@ -692,6 +702,12 @@ def actualizar_grupo(request):
             
             if not all([nombre, materia_id, semestre_id, profesor_id, turno]):
                 return JsonResponse({'success': False, 'message': 'Nombre, materia, semestre, profesor y turno son obligatorios'})
+            
+            if not codigo_clase:
+                return JsonResponse({'success': False, 'message': 'El código de clase es obligatorio'})
+
+            if len(codigo_clase) > 20:
+                return JsonResponse({'success': False, 'message': 'El código de clase no puede exceder 20 caracteres'})
             
             # Validar fechas si están presentes
             fecha_inicio_dt = None
@@ -713,22 +729,23 @@ def actualizar_grupo(request):
                 return JsonResponse({'success': False, 'message': 'La fecha de fin debe ser posterior a la fecha de inicio'})
             
             with connection.cursor() as cursor:
-                # Verificar si ya existe otro grupo con ese nombre en el mismo semestre
+                # Verificar si ya existe otro grupo con ese nombre o código en el mismo semestre
                 cursor.execute("""
                     SELECT id FROM grupos 
-                    WHERE nombre = %s AND semestre_id = %s AND id != %s
-                """, [nombre, semestre_id, grupo_id])
+                    WHERE (nombre = %s OR codigo_clase = %s) AND semestre_id = %s AND id != %s
+                """, [nombre, codigo_clase, semestre_id, grupo_id])
                 
                 if cursor.fetchone():
                     return JsonResponse({
                         'success': False, 
-                        'message': 'Ya existe otro grupo con ese nombre en este semestre'
+                        'message': 'Ya existe otro grupo con ese nombre o código en este semestre'
                     })
                 
                 # Actualizar grupo
                 cursor.execute("""
                     UPDATE grupos SET 
                     nombre = %s, 
+                    codigo_clase = %s, 
                     descripcion = %s, 
                     materia_id = %s, 
                     semestre_id = %s, 
@@ -740,6 +757,7 @@ def actualizar_grupo(request):
                     WHERE id = %s
                 """, [
                     nombre,
+                    codigo_clase,
                     descripcion if descripcion else None,
                     materia_id,
                     semestre_id,
@@ -841,10 +859,10 @@ def perfil_usuario(request):
     user_id = request.session.get('user_id')
     
     with connection.cursor() as cursor:
-        # Obtener todos los datos del usuario
+        # Obtener todos los datos del usuario INCLUYENDO icono_user
         cursor.execute("""
             SELECT id, nombre, apellido, email, rol, fecha_creacion, 
-                   numero_cuenta, perfil_completado, telefono, usuario
+                   numero_cuenta, perfil_completado, telefono, usuario, icono_user
             FROM usuarios 
             WHERE id = %s
         """, [user_id])
@@ -937,7 +955,6 @@ def actualizar_perfil(request):
                 request.session['username'] = usuario
                 request.session['email'] = email
                 
-                messages.success(request, 'Perfil actualizado exitosamente')
                 return redirect('administradores:perfil_usuario')
                 
         except Exception as e:
@@ -945,6 +962,136 @@ def actualizar_perfil(request):
             return redirect('administradores:perfil_usuario')
     
     return redirect('administradores:perfil_usuario')
+
+@csrf_exempt
+def subir_avatar(request):
+    """
+    Vista para subir y actualizar la imagen de perfil del usuario
+    """
+    if request.method == 'POST':
+        try:
+            from django.conf import settings
+            import os
+            from PIL import Image
+            import hashlib
+            from datetime import datetime
+            
+            user_id = request.POST.get('user_id')
+            avatar_file = request.FILES.get('avatar')
+            
+            if not avatar_file:
+                return JsonResponse({'success': False, 'message': 'No se recibió ninguna imagen'})
+            
+            # Validar tipo de archivo
+            allowed_types = ['image/jpeg', 'image/png', 'image/jpg']
+            if avatar_file.content_type not in allowed_types:
+                return JsonResponse({'success': False, 'message': 'Formato no permitido. Use JPG o PNG'})
+            
+            # Validar tamaño (máximo 10MB)
+            if avatar_file.size > 10 * 1024 * 1024:
+                return JsonResponse({'success': False, 'message': 'La imagen no debe superar 10MB'})
+            
+            # Obtener rol y avatar actual del usuario
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT rol, icono_user FROM usuarios WHERE id = %s", [user_id])
+                result = cursor.fetchone()
+                if not result:
+                    return JsonResponse({'success': False, 'message': 'Usuario no encontrado'})
+                
+                rol = result[0]
+                old_avatar = result[1]
+            
+            # Determinar carpeta según rol
+            if rol == 'administrador':
+                folder_name = 'Perfil_admin'
+            elif rol == 'profesor':
+                folder_name = 'Perfil_profesor'
+            else:
+                folder_name = 'Perfil_estudiante'
+            
+            # Crear ruta completa
+            upload_dir = os.path.join(settings.BASE_DIR, 'Perfiles', folder_name)
+            os.makedirs(upload_dir, exist_ok=True)
+            
+            # Eliminar avatar anterior si existe
+            if old_avatar:
+                old_path = os.path.join(settings.BASE_DIR, old_avatar)
+                if os.path.exists(old_path):
+                    try:
+                        os.remove(old_path)
+                    except:
+                        pass
+            
+            # Generar nombre único para el archivo
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            file_hash = hashlib.md5(f"{user_id}{timestamp}".encode()).hexdigest()[:8]
+            extension = os.path.splitext(avatar_file.name)[1].lower()
+            
+            if extension not in ['.jpg', '.jpeg', '.png']:
+                extension = '.jpg'
+            
+            filename = f"u{user_id}_{file_hash}{extension}"
+            filepath = os.path.join(upload_dir, filename)
+            
+            # Procesar y guardar imagen
+            img = Image.open(avatar_file)
+            
+            # Convertir a RGB si es necesario
+            if img.mode in ('RGBA', 'LA', 'P'):
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'P':
+                    img = img.convert('RGBA')
+                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+                img = background
+            
+            # Redimensionar manteniendo aspecto
+            img.thumbnail((800, 800), Image.Resampling.LANCZOS)
+            
+            # Guardar imagen optimizada
+            img.save(filepath, 'JPEG', quality=90, optimize=True)
+            
+            # Guardar ruta relativa en base de datos
+            relative_path = f"Perfiles/{folder_name}/{filename}"
+            
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    UPDATE usuarios 
+                    SET icono_user = %s
+                    WHERE id = %s
+                """, [relative_path, user_id])
+            
+            # Devolver JSON exitoso
+            return JsonResponse({
+                'success': True,
+                'message': 'Imagen de perfil actualizada exitosamente',
+                'reload': True  # <-- Bandera para indicar que debe recargar
+            })
+            
+        except Exception as e:
+            import traceback
+            error_detail = traceback.format_exc()
+            print(f"Error completo en subir_avatar: {error_detail}")
+            return JsonResponse({
+                'success': False,
+                'message': f'Error al procesar la imagen: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @csrf_exempt
 def cambiar_password(request):
@@ -963,20 +1110,122 @@ def cambiar_password(request):
                 messages.error(request, 'La contraseña debe tener al menos 8 caracteres')
                 return redirect('administradores:perfil_usuario')
             
+            # Validar fortaleza de contraseña (igual que en el registro)
+            import re
+            tiene_mayuscula = re.search(r'[A-Z]', nueva_password)
+            tiene_minuscula = re.search(r'[a-z]', nueva_password)
+            tiene_numero = re.search(r'[0-9]', nueva_password)
+            
+            if not (tiene_mayuscula and tiene_minuscula and tiene_numero):
+                messages.error(request, 
+                    'Para mayor seguridad, la contraseña debe contener:\n'
+                    '• Al menos una letra mayúscula\n'
+                    '• Al menos una letra minúscula\n'
+                    '• Al menos un número'
+                )
+                return redirect('administradores:perfil_usuario')
+            
             if nueva_password != confirmar_password:
                 messages.error(request, 'Las contraseñas no coinciden')
                 return redirect('administradores:perfil_usuario')
             
-            # Hashear la contraseña
+            # Verificar que la nueva contraseña sea diferente a la actual
             import hashlib
-            password_hash = hashlib.sha256(nueva_password.encode()).hexdigest()
+            import secrets
+            import string
             
             with connection.cursor() as cursor:
+                # Obtener el hash actual de la contraseña
+                cursor.execute("SELECT password_hash FROM usuarios WHERE id = %s", [user_id])
+                resultado = cursor.fetchone()
+                
+                if not resultado:
+                    messages.error(request, 'Usuario no encontrado')
+                    return redirect('administradores:perfil_usuario')
+                
+                password_hash_actual = resultado[0]
+                
+                # Función para generar hash scrypt (igual que en register)
+                def generar_hash_scrypt(password):
+                    salt = secrets.token_hex(16)
+                    
+                    password_hash = hashlib.scrypt(
+                        password.encode('utf-8'),
+                        salt=salt.encode('utf-8'),
+                        n=16384,
+                        r=8,
+                        p=1,
+                        dklen=64
+                    )
+                    
+                    hash_hex = password_hash.hex()
+                    return f"scrypt:16384:8:1${salt}${hash_hex}"
+                
+                # Generar nuevo hash
+                nuevo_password_hash = generar_hash_scrypt(nueva_password)
+                
+                # Verificar que la nueva contraseña no sea igual a la actual
+                # (Para esto necesitaríamos una función de verificación)
+                def verificar_password(password, password_hash):
+                    """Verifica si una contraseña coincide con el hash almacenado"""
+                    if password_hash.startswith('scrypt:'):
+                        # Extraer partes del hash
+                        parts = password_hash.split('$')
+                        if len(parts) != 3:
+                            return False
+                        
+                        algorithm_params = parts[0]
+                        salt = parts[1]
+                        stored_hash = parts[2]
+                        
+                        # Extraer parámetros
+                        algo, n, r, p = algorithm_params.split(':')
+                        n = int(n)
+                        r = int(r)
+                        p = int(p)
+                        
+                        # Calcular hash de la contraseña proporcionada
+                        try:
+                            test_hash = hashlib.scrypt(
+                                password.encode('utf-8'),
+                                salt=salt.encode('utf-8'),
+                                n=n,
+                                r=r,
+                                p=p,
+                                dklen=64
+                            ).hex()
+                            
+                            return test_hash == stored_hash
+                        except:
+                            return False
+                    elif len(password_hash) == 64:  # SHA256 antiguo
+                        test_hash = hashlib.sha256(password.encode()).hexdigest()
+                        return test_hash == password_hash
+                    else:
+                        return False
+                
+                # Verificar si la nueva contraseña es igual a la actual
+                if verificar_password(nueva_password, password_hash_actual):
+                    messages.error(request, 'La nueva contraseña no puede ser igual a la actual')
+                    return redirect('administradores:perfil_usuario')
+                
+                # Actualizar contraseña en la base de datos
                 cursor.execute("""
                     UPDATE usuarios 
                     SET password_hash = %s
                     WHERE id = %s
-                """, [password_hash, user_id])
+                """, [nuevo_password_hash, user_id])
+                
+                # Registrar el cambio de contraseña (opcional, puedes crear una tabla de auditoría)
+                try:
+                    cursor.execute("""
+                        INSERT INTO auditoria_cambios_password 
+                        (usuario_id, fecha_cambio, ip_address) 
+                        VALUES (%s, NOW(), %s)
+                    """, [user_id, request.META.get('REMOTE_ADDR', '')])
+                except:
+                    # Si la tabla no existe, solo ignorar
+                    pass
                 
                 messages.success(request, 'Contraseña cambiada exitosamente')
                 return redirect('administradores:perfil_usuario')

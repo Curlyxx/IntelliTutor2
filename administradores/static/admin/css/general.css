@@ -1,2 +1,1020 @@
+/* Portal del Alumno - IntelliTutor UNAM */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Messages - Mejorado para mayor visibilidad */
+.messages-container {
+    position: fixed;
+    top: 90px; /* Más cerca del borde superior */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    width: auto;
+    max-width: 90%;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.message {
+    padding: 1rem 1.5rem; /* Más padding para mayor tamaño */
+    border-radius: 10px; /* Bordes más redondeados */
+    font-weight: 700; /* Texto más grueso */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 1;
+    transform: translateY(0);
+    min-width: 250px; /* Más ancho */
+    max-width: 500px;
+    text-align: center;
+    font-size: 1rem; /* Texto más grande */
+    backdrop-filter: blur(8px); /* Efecto de vidrio */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25); /* Sombra más fuerte */
+    border: 2px solid; /* Borde más grueso */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    line-height: 1.4;
+}
+
+.message.hide {
+    opacity: 0 !important;
+    transform: translateY(-10px) !important; /* Animación más notoria */
+}
+
+/* Éxito - Verde más vibrante y opaco */
+.message.success {
+    background: rgba(34, 139, 34, 0.95); /* Menos transparente */
+    color: white; /* Texto blanco para mejor contraste */
+    border-color: rgba(60, 200, 60, 0.6); /* Borde más visible */
+    box-shadow: 0 8px 25px rgba(34, 139, 34, 0.3); /* Sombra verde */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Sombra en texto */
+}
+
+/* Error - Rojo más intenso */
+.message.error {
+    background: rgba(183, 28, 28, 0.95);
+    color: white;
+    border-color: rgba(255, 70, 70, 0.6);
+    box-shadow: 0 8px 25px rgba(183, 28, 28, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Info - Azul más brillante */
+.message.info {
+    background: rgba(11, 95, 215, 0.95);
+    color: white;
+    border-color: rgba(70, 130, 255, 0.6);
+    box-shadow: 0 8px 25px rgba(11, 95, 215, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Agrega también warning si no lo tienes */
+.message.warning {
+    background: rgba(255, 152, 0, 0.95);
+    color: white;
+    border-color: rgba(255, 193, 7, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Animación de entrada más notoria */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message {
+    animation: slideInDown 0.4s ease-out;
+}
+
+/* Para mayor visibilidad, agrega un efecto de brillo */
+.message::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(0, 0, 0, 0.05) 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Hacer el texto más legible */
+.message {
+    letter-spacing: 0.5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Opcional: Agregar ícono según el tipo de mensaje */
+.message::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: brightness(0) invert(1); /* Hace el ícono blanco */
+}
+
+.message.success::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+.message.error::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+}
+
+.message.info::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+.message.warning::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    background: #003366;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid #B8860B;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.logo-unam {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #003366;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.brand-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #B8860B;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+    background: rgba(184, 134, 11, 0.2);
+    color: #B8860B;
+}
+
+/* Carousel - VERSIÓN OPTIMIZADA CON <img> */
+.carousel-container {
+    width: 100%;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    height: 600px; /* Altura fija */
+}
+
+.carousel {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Imagen dentro del slide */
+.carousel-slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    z-index: 0;
+}
+
+/* Overlay oscuro sobre la imagen */
+.carousel-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1;
+}
+
+/* Contenido del slide (texto) */
+.slide-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    animation: slideContentFadeIn 0.8s ease-out;
+}
+
+@keyframes slideContentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-content h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Botones de navegación (dots) */
+.carousel-buttons {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 3;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.7);
+    transform: scale(1.2);
+}
+
+.carousel-dot.active {
+    background: #B8860B; /* Color oro UNAM */
+    width: 35px;
+    border-radius: 6px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* YA NO SE NECESITAN las clases de background-image */
+/* Comentadas para que no interfieran */
+/* .carousel-slide.slide-1 { background-image: url('../img/carrusel_1_admin.webp'); } */
+/* .carousel-slide.slide-2 { background-image: url('../img/carrusel_2_admin.webp'); } */
+/* .carousel-slide.slide-3 { background-image: url('../img/carrusel_3_admin.webp'); } */
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .carousel-container {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-container {
+        height: 400px;
+    }
+    
+    .slide-content h2 {
+        font-size: 2rem;
+    }
+    
+    .carousel-buttons {
+        bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 320px;
+    }
+    
+    .slide-content h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Welcome Section */
+.welcome-section {
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 3rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.welcome-section h1 {
+    font-size: 2.2rem;
+    color: #003366;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Sections */
+.sections-title {
+    max-width: 1400px;
+    margin: 3rem auto 2rem;
+    padding: 0 2rem;
+    font-size: 1.8rem;
+    color: #003366;
+    font-weight: 700;
+}
+
+.sections-grid {
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.section-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left: 4px solid #003366;
+}
+
+.section-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 51, 102, 0.15);
+    border-left-color: #B8860B;
+}
+
+.section-image {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e0e0e0;
+}
+
+.section-img-practicas { background-image: url('../img/practicas.jpeg'); }
+.section-img-cursos { background-image: url('../img/cursos.jpg'); }
+.section-img-evaluaciones { background-image: url('../img/evaluaciones.jpg'); }
+.section-img-recursos { background-image: url('../img/recursos_educativos.webp'); }
+.section-img-grupos { background-image: url('../img/grupos.webp'); }
+
+.section-content {
+    padding: 1.5rem;
+}
+
+.section-icon {
+    width: 50px;
+    height: 50px;
+    background: #003366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-content h3 {
+    font-size: 1.4rem;
+    color: #003366;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.section-content p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+}
+
+.section-btn {
+    background: #003366;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.section-btn:hover {
+    background: #B8860B;
+    transform: translateX(5px);
+}
+
+/* Footer */
+.footer {
+    background: #003366;
+    color: white;
+    padding: 3rem 0 1rem;
+    margin-top: 4rem;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    color: #B8860B;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.footer-links a:hover {
+    color: #B8860B;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.social-icon:hover {
+    background: #B8860B;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.footer-desc {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+/* User Menu Styles */
+.user-section {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.profile-icon i {
+    font-size: 1.1rem;
+}
+
+.user-name-badge {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.logout-btn {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+    background: rgba(220, 53, 69, 0.3);
+    transform: translateY(-1px);
+}
+@media (max-width: 768px) {
+    .nav-links { gap: 1rem; }
+    .nav-links a span { display: none; }
+    .carousel-slide { height: 300px; }
+    .slide-content h2 { font-size: 2rem; }
+    .welcome-section h1 { font-size: 2rem; }
+    .sections-grid { grid-template-columns: 1fr; }
+}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* ===== ESTILOS BASE DEL DROPDOWN ===== */
+    :root {
+        --unam-azul: #00356b;
+        --unam-azul-claro: #004b8d;
+        --unam-oro: #c69214;
+        --unam-oro-claro: #e6b22c;
+        --unam-gris: #f5f5f5;
+        --unam-gris-oscuro: #333333;
+    }
+    .profile-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-toggle {
+        background: linear-gradient(135deg, var(--unam-azul) 0%, var(--unam-azul-claro) 100%);
+        border: 1px solid rgba(198, 146, 20, 0.3);
+        cursor: pointer;
+        padding: 8px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 53, 107, 0.2);
+    }
+
+    .profile-toggle:hover {
+        background: linear-gradient(135deg, var(--unam-azul-claro) 0%, var(--unam-azul) 100%);
+        border-color: var(--unam-oro);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 53, 107, 0.3);
+    }
+
+    .profile-icon {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: white;
+        font-weight: 500;
+    }
+
+    .unam-badge {
+        width: 35px;
+        height: 35px;
+        background: var(--unam-oro);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: var(--unam-azul);
+        border: 2px solid white;
+    }
+
+    .user-name-badge {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .dropdown-arrow {
+        font-size: 11px;
+        transition: transform 0.3s;
+        opacity: 0.8;
+    }
+
+    .profile-dropdown.active .dropdown-arrow {
+        transform: rotate(180deg);
+    }
+
+    /* ===== DROPDOWN MENU ===== */
+    .dropdown-menu.unam-dropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        min-width: 320px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 53, 107, 0.15);
+        z-index: 1000;
+        margin-top: 10px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+    }
+
+    .profile-dropdown.active .dropdown-menu.unam-dropdown {
+        display: block;
+        animation: unamFadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes unamFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ===== HEADER DEL DROPDOWN ===== */
+    .dropdown-header.unam-header {
+        padding: 25px;
+        background: linear-gradient(135deg, var(--unam-azul) 0%, var(--unam-azul-claro) 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dropdown-header.unam-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(30px, -30px);
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .unam-avatar {
+        width: 60px;
+        height: 60px;
+        background: var(--unam-oro);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        flex-shrink: 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .avatar-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+    .user-fullname {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .user-email {
+        font-size: 13px;
+        opacity: 0.9;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .unam-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .unam-role i {
+        font-size: 10px;
+    }
+
+    /* ===== DIVISORES ===== */
+    .dropdown-divider.unam-divider {
+        height: 1px;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(198, 146, 20, 0.3) 50%, 
+            transparent 100%);
+        margin: 0;
+    }
+
+    /* ===== ITEMS DEL MENU ===== */
+    .dropdown-item.unam-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 18px 25px;
+        color: var(--unam-gris-oscuro);
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-left: 4px solid transparent;
+        background: white;
+    }
+
+    .dropdown-item.unam-item:hover {
+        background: linear-gradient(90deg, 
+            rgba(0, 53, 107, 0.05) 0%, 
+            rgba(0, 53, 107, 0.02) 100%);
+        border-left-color: var(--unam-oro);
+        padding-left: 30px;
+    }
+
+    .dropdown-item.unam-item:hover .unam-item-title {
+        color: var(--unam-azul);
+    }
+
+    .dropdown-item.unam-item:hover .unam-item-icon {
+        background: var(--unam-azul);
+        transform: scale(1.1);
+    }
+
+    .unam-item-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--unam-gris);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--unam-azul);
+        font-size: 16px;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .unam-item-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .unam-item-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--unam-azul);
+        transition: color 0.2s;
+    }
+
+    .unam-item-desc {
+        font-size: 12px;
+        color: #666;
+        font-weight: 400;
+    }
+
+    .unam-item-arrow {
+        color: #999;
+        font-size: 12px;
+        transition: transform 0.2s;
+    }
+
+    .dropdown-item.unam-item:hover .unam-item-arrow {
+        color: var(--unam-oro);
+        transform: translateX(3px);
+    }
+
+    /* ===== ITEM LOGOUT ===== */
+    .dropdown-item.unam-item.logout:hover {
+        border-left-color: #dc3545;
+    }
+
+    .dropdown-item.unam-item.logout:hover .unam-item-icon {
+        background: #dc3545;
+        color: white;
+    }
+
+    .dropdown-item.unam-item.logout .unam-item-title {
+        color: #dc3545;
+    }
+
+    .dropdown-item.unam-item.logout:hover .unam-item-title {
+        color: #c82333;
+    }
+
+    /* ===== FOOTER UNAM ===== */
+    .dropdown-footer.unam-footer {
+        padding: 15px 25px;
+        background: var(--unam-gris);
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .unam-logo-small {
+        display: flex;
+        gap: 2px;
+        font-weight: 800;
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .unam-azul {
+        color: var(--unam-azul);
+    }
+
+    .unam-oro {
+        color: var(--unam-oro);
+    }
+
+    .unam-footer-text {
+        font-size: 12px;
+        color: #666;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .dropdown-menu.unam-dropdown {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 320px;
+            margin-top: 0;
+        }
+        
+        .profile-toggle {
+            padding: 6px 12px;
+        }
+        
+        .user-name-badge {
+            font-size: 14px;
+        }
+    }
+
+    /* ===== OVERLAY ===== */
+    .dropdown-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+        display: none;
+        background: rgba(0, 0, 0, 0.1);
+    }

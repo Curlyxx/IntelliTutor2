@@ -17,7 +17,6 @@
         {% endfor %}
     </div>
     {% endif %}
-    
     <!-- Header -->
     <header class="header">
         <nav class="nav-container">
@@ -30,139 +29,29 @@
                 <li><a href="#"><i class="fas fa-book"></i> <span>Cursos</span></a></li>
                 <li><a href="#"><i class="fas fa-flask"></i> <span>Prácticas</span></a></li>
                 <li><a href="#"><i class="fas fa-chart-line"></i> <span>Progreso</span></a></li>
-                
-                <!-- Dropdown del Usuario -->
-                <li class="profile-dropdown">
-                    <button class="profile-toggle" id="profileToggle">
-                        <div class="profile-icon">
-                            <div class="unam-badge">
-                                <i class="fas fa-user-graduate"></i>
+                <li><a href="#"><i class="fas fa-question-circle"></i> <span>Ayuda</span></a></li>
+                <li><a href="#"><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
+                <div class="user-section">
+                    <ul class="user-menu">
+                        <li>
+                            <div class="profile-icon">
+                                <i class="fas fa-user"></i>
+                                <span class="user-name-badge">
+                                    {% if user_name %}
+                                        {{ user_name|truncatechars:15 }}
+                                    {% else %}
+                                        Usuario
+                                    {% endif %}
+                                </span>
                             </div>
-                            <span class="user-name-badge">
-                                {% if user_name %}
-                                    {{ user_name|truncatechars:15 }}
-                                {% else %}
-                                    Usuario
-                                {% endif %}
-                            </span>
-                            <i class="fas fa-chevron-down dropdown-arrow"></i>
-                        </div>
-                    </button>
-                    
-                    <div class="dropdown-menu unam-dropdown" id="profileDropdown">
-                        <!-- Header del Dropdown -->
-                        <div class="dropdown-header unam-header">
-                            <div class="user-info">
-                                <div class="unam-avatar">
-                                    <i class="fas fa-user-graduate"></i>
-                                </div>
-                                <div class="user-details">
-                                    <strong class="user-fullname">
-                                        {% if user_name %}
-                                            {{ user_name }}
-                                        {% else %}
-                                            Estudiante UNAM
-                                        {% endif %}
-                                    </strong>
-                                    <span class="user-email">
-                                        {% if user_email %}
-                                            {{ user_email }}
-                                        {% else %}
-                                            estudiante@unam.mx
-                                        {% endif %}
-                                    </span>
-                                    <span class="unam-role">
-                                        <i class="fas fa-user-check"></i>
-                                        {{ user_role|title }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="dropdown-divider unam-divider"></div>
-                        
-                        <!-- Menú de Opciones -->
-                        <a href="#" class="dropdown-item unam-item" id="editarPerfilBtn">
-                            <div class="unam-item-icon">
-                                <i class="fas fa-user-edit"></i>
-                            </div>
-                            <div class="unam-item-content">
-                                <span class="unam-item-title">Editar Perfil</span>
-                                <span class="unam-item-desc">Actualiza tu información personal</span>
-                            </div>
-                            <i class="fas fa-chevron-right unam-item-arrow"></i>
-                        </a>
-                        
-                        <a href="#" class="dropdown-item unam-item" id="cambiarPasswordBtn">
-                            <div class="unam-item-icon">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <div class="unam-item-content">
-                                <span class="unam-item-title">Cambiar Contraseña</span>
-                                <span class="unam-item-desc">Actualiza tu contraseña de acceso</span>
-                            </div>
-                            <i class="fas fa-chevron-right unam-item-arrow"></i>
-                        </a>
-                        
-                        <a href="#" class="dropdown-item unam-item" id="infoSistemaBtn">
-                            <div class="unam-item-icon">
-                                <i class="fas fa-info-circle"></i>
-                            </div>
-                            <div class="unam-item-content">
-                                <span class="unam-item-title">Información del Sistema</span>
-                                <span class="unam-item-desc">Detalles de tu cuenta y configuración</span>
-                            </div>
-                            <i class="fas fa-chevron-right unam-item-arrow"></i>
-                        </a>
-                        
-                        <div class="dropdown-divider unam-divider"></div>
-                        
-                        <!-- Sección de Ayuda y Contacto (sin botones) -->
-                        <div class="help-section">
-                            <div class="help-item">
-                                <i class="fas fa-life-ring help-icon"></i>
-                                <div class="help-content">
-                                    <div class="help-title">Ayuda y Soporte</div>
-                                    <div class="help-text">Correo: soporte@intellitutor.unam.mx</div>
-                                </div>
-                            </div>
-                            
-                            <div class="help-item">
-                                <i class="fas fa-envelope help-icon"></i>
-                                <div class="help-content">
-                                    <div class="help-title">Contacto</div>
-                                    <div class="help-text">contacto@intellitutor.unam.mx</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="dropdown-divider unam-divider"></div>
-                        
-                        <!-- Cerrar Sesión -->
-                        <a href="{% url 'login:logout' %}" class="dropdown-item unam-item logout" onclick="return confirm('¿Estás seguro de que quieres cerrar sesión?')">
-                            <div class="unam-item-icon">
-                                <i class="fas fa-sign-out-alt"></i>
-                            </div>
-                            <div class="unam-item-content">
-                                <span class="unam-item-title">Cerrar Sesión</span>
-                                <span class="unam-item-desc">Salir del sistema de manera segura</span>
-                            </div>
-                            <i class="fas fa-chevron-right unam-item-arrow"></i>
-                        </a>
-                        
-                        <!-- Footer UNAM -->
-                        <div class="dropdown-footer unam-footer">
-                            <div class="unam-logo-small">
-                                <span class="unam-azul">UNAM</span>
-                                <span class="unam-oro">IntelliTutor</span>
-                            </div>
-                            <span class="unam-footer-text">Portal Estudiantil</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Overlay para cerrar al hacer clic fuera -->
-                    <div class="dropdown-overlay" id="dropdownOverlay"></div>
-                </li>
+                        </li>
+                        <li>
+                            <button class="logout-btn" onclick="confirmLogout()">
+                                <i class="fas fa-sign-out-alt"></i> Salir
+                            </button>
+                        </li>
+                    </ul>
+                </div>
             </ul>
         </nav>
     </header>
@@ -198,20 +87,11 @@
         <h1>Bienvenido Estudiante</h1>
         <p>Explora tus prácticas, evaluaciones y recursos educativos en IntelliTutor UNAM.</p>
     </div>
-    <!-- Agrega esto justo después del Welcome Section, solo si estás en desarrollo -->
-{% if debug %}
-<div style="max-width: 1400px; margin: 1rem auto; padding: 0 2rem; text-align: center;">
-    <a href="{% url 'alumnos:agregar_cursos_prueba' %}" style="background: #B8860B; color: white; padding: 0.5rem 1rem; border-radius: 5px; text-decoration: none; font-size: 0.9rem;">
-        <i class="fas fa-magic"></i> Agregar Cursos de Prueba (Solo Dev)
-    </a>
-</div>
-{% endif %}
 
     <!-- Sections Title -->
     <h2 class="sections-title">Secciones</h2>
 
     <!-- Sections Grid -->
-        <!-- Sections Grid -->
     <div class="sections-grid">
         <div class="section-card">
             <div class="section-image section-img-practicas"></div>
@@ -221,9 +101,9 @@
                 </div>
                 <h3>Portal de Estudiante</h3>
                 <p>Accede y realiza tus prácticas asignadas.</p>
-                <a href="#" class="section-btn">
+                <button class="section-btn">
                     Ir a Prácticas <i class="fas fa-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </div>
 
@@ -235,9 +115,9 @@
                 </div>
                 <h3>Mis Cursos</h3>
                 <p>Consulta tus cursos activos y materiales de estudio.</p>
-                <a href="{% url 'alumnos:mis_cursos' %}" class="section-btn">
+                <button class="section-btn">
                     Ver Cursos <i class="fas fa-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </div>
 
@@ -249,11 +129,12 @@
                 </div>
                 <h3>Evaluaciones</h3>
                 <p>Revisa tus calificaciones y evaluaciones pendientes.</p>
-                <a href="#" class="section-btn">
+                <button class="section-btn">
                     Ver Evaluaciones <i class="fas fa-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </div>
+
 
         <div class="section-card">
             <div class="section-image section-img-recursos"></div>
@@ -263,9 +144,9 @@
                 </div>
                 <h3>Recursos Educativos</h3>
                 <p>Accede a materiales, tutoriales y recursos adicionales.</p>
-                <a href="#" class="section-btn">
+                <button class="section-btn">
                     Explorar Recursos <i class="fas fa-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </div>
 
@@ -277,9 +158,9 @@
                 </div>
                 <h3>Tus grupos y compañeros</h3>
                 <p>Participa en discusiones con tus compañeros.</p>
-                <a href="#" class="section-btn">
+                <button class="section-btn">
                     Ir a Grupos <i class="fas fa-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -343,104 +224,27 @@
     </footer>
 
     <script>
-        // Funcionalidad del Dropdown
-        document.addEventListener('DOMContentLoaded', function() {
-            const profileToggle = document.getElementById('profileToggle');
-            const profileDropdown = document.getElementById('profileDropdown');
-            const dropdownOverlay = document.getElementById('dropdownOverlay');
-            const profileContainer = document.querySelector('.profile-dropdown');
-
-            // Alternar dropdown al hacer clic
-            if (profileToggle) {
-                profileToggle.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    profileContainer.classList.toggle('active');
-                    if (dropdownOverlay) {
-                        dropdownOverlay.style.display = profileContainer.classList.contains('active') ? 'block' : 'none';
-                    }
-                });
-            }
-
-            // Cerrar dropdown al hacer clic en el overlay
-            if (dropdownOverlay) {
-                dropdownOverlay.addEventListener('click', function() {
-                    profileContainer.classList.remove('active');
-                    dropdownOverlay.style.display = 'none';
-                });
-            }
-
-            // Cerrar dropdown al hacer clic fuera
-            document.addEventListener('click', function(e) {
-                if (profileContainer && !profileContainer.contains(e.target)) {
-                    profileContainer.classList.remove('active');
-                    if (dropdownOverlay) {
-                        dropdownOverlay.style.display = 'none';
-                    }
-                }
-            });
-
-            // Prevenir cierre al hacer clic dentro del dropdown
-            if (profileDropdown) {
-                profileDropdown.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            }
-
-            // Redireccionar a páginas específicas
-            document.getElementById('editarPerfilBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = "{% url 'alumnos:editar_perfil' %}";
-            });
-
-            document.getElementById('cambiarPasswordBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = "{% url 'alumnos:cambiar_password' %}";
-            });
-
-            document.getElementById('infoSistemaBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = "{% url 'alumnos:info_sistema' %}";
-            });
-
-            // Confirmación para enlaces de logout
-            const logoutLinks = document.querySelectorAll('a[href*="logout"], a.logout');
-            logoutLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    if (!confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                        e.preventDefault();
-                    }
-                });
-            });
-        });
-
-        // Carousel Script (manteniendo tu código original)
         let currentSlide = 0;
         const carousel = document.getElementById('carousel');
         const dots = document.querySelectorAll('.carousel-dot');
         const totalSlides = 3;
 
         function goToSlide(index) {
-            if (carousel) {
-                currentSlide = index;
-                carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-                
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentSlide);
-                });
-            }
+            currentSlide = index;
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
         }
 
         function nextSlide() {
-            if (carousel) {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                goToSlide(currentSlide);
-            }
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
         }
 
         // Auto-advance carousel every 4 seconds
-        if (carousel) {
-            setInterval(nextSlide, 4000);
-        }
+        setInterval(nextSlide, 4000);
 
         // Auto-dismiss messages after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
@@ -451,6 +255,23 @@
                     // remove from DOM after animation
                     setTimeout(() => msgs.forEach(m => m.remove()), 600);
                 }, 5000);
+            }
+        });
+
+
+        function confirmLogout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                window.location.href = "{% url 'login:logout' %}";
+            }
+        }
+
+        // Opcional: Mostrar información del usuario al hacer clic en el icono
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileIcon = document.querySelector('.profile-icon');
+            if (profileIcon) {
+                profileIcon.addEventListener('click', function() {
+                    alert('Usuario: {{ user_name }}\nRol: {{ user_role|title }}');
+                });
             }
         });
     </script>

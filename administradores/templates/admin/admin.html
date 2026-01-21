@@ -7,9 +7,7 @@
     <title>{% block title %}Panel de Administración - IntelliTutor UNAM{% endblock %}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'admin/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'alumnos/css/portal_alumnos.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">    
     <!-- Bloque para CSS adicional de páginas hijas -->
     {% block extra_css %}
     {% endblock %}
@@ -39,80 +37,8 @@
                 <li><a href="{% url 'administradores:semestres' %}"><i class="fas fa-calendar-alt"></i> <span>Semestres</span></a></li>
                 <li><a href="#"><i class="fas fa-clipboard-list"></i> <span>Solicitudes</span></a></li>
                 <div class="user-section">
-                    <div class="profile-dropdown">
-                        <button type="button" class="profile-toggle" id="profileToggle" onclick="toggleProfileDropdown(event)">
-                            <div class="profile-icon">
-                                <div class="unam-badge">
-                                    <i class="fas fa-user-shield"></i>
-                                </div>
-                                <span class="user-name-badge">
-                                    {% if user_name %}
-                                        {{ user_name|truncatechars:15 }}
-                                    {% else %}
-                                        Administrador
-                                    {% endif %}
-                                </span>
-                                <i class="fas fa-chevron-down dropdown-arrow"></i>
-                            </div>
-                        </button>
-                        
-                        <div class="dropdown-menu unam-dropdown" id="profileDropdown">
-                            <div class="dropdown-header unam-header">
-                                <div class="user-info">
-                                    <div class="unam-avatar">
-                                        <!-- Imagen de perfil editable -->
-                                        <img src="{% static 'img/default-avatar.webp' %}" alt="Avatar" class="avatar-image" id="avatarImage">
-                                    </div>
-                                    <div class="user-details">
-                                        <strong class="user-fullname">
-                                            {% if user_name %}
-                                                {{ user_name }}
-                                            {% else %}
-                                                Administrador UNAM
-                                            {% endif %}
-                                        </strong>
-                                        <small class="user-email">
-                                            {{ request.session.email|default:"usuario@unam.mx" }}
-                                        </small>
-                                        <span class="unam-role">
-                                            <i class="fas fa-user-tag"></i>
-                                            {{ request.session.user_role|default:"Administrador" }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="dropdown-divider unam-divider"></div>
-                            
-                            <a href="{% url 'administradores:perfil_usuario' %}" class="dropdown-item unam-item">
-                                <div class="unam-item-icon">
-                                    <i class="fas fa-id-card"></i>
-                                </div>
-                                <div class="unam-item-content">
-                                    <span class="unam-item-title">Mi Perfil UNAM</span>
-                                    <span class="unam-item-desc">Ver y editar información personal</span>
-                                </div>
-                                <i class="fas fa-chevron-right unam-item-arrow"></i>
-                            </a>
-                            
-                            <div class="dropdown-divider unam-divider"></div>
-                            
-                            <a href="{% url 'administradores:cerrar_sesion' %}" class="dropdown-item unam-item logout">
-                                <div class="unam-item-icon">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                </div>
-                                <div class="unam-item-content">
-                                    <span class="unam-item-title">Cerrar Sesión</span>
-                                    <span class="unam-item-desc">Salir del sistema</span>
-                                </div>
-                                <i class="fas fa-chevron-right unam-item-arrow"></i>
-                            </a>
-                            
-                            <div class="dropdown-footer unam-footer">
-                                <span class="unam-footer-text">Sistema Académico</span>
-                            </div>
-                        </div>
-                    </div>
+                        {% include 'admin/includes/profile_dropdown.html' %}
+
                 </div>
             </ul>
         </nav>
@@ -121,30 +47,34 @@
     <!-- Bloque de contenido principal que las páginas hijas pueden sobreescribir -->
     {% block content %}
     <!-- Carousel -->
-    <div class="carousel-container">
-        <div class="carousel" id="carousel">
-            <div class="carousel-slide slide-1">
-                <div class="slide-content">
-                    <h2>Bienvenido a IntelliTutor UNAM</h2>
-                </div>
-            </div>
-            <div class="carousel-slide slide-2">
-                <div class="slide-content">
-                    <h2>Aprende a tu Ritmo</h2>
-                </div>
-            </div>
-            <div class="carousel-slide slide-3">
-                <div class="slide-content">
-                    <h2>Alcanza tus Metas</h2>
-                </div>
+    <!-- Carousel -->
+<div class="carousel-container">
+    <div class="carousel" id="carousel">
+        <div class="carousel-slide slide-1">
+            <img src="{% static 'admin/img/carrusel_1_admin.webp' %}" alt="Bienvenido a IntelliTutor UNAM">
+            <div class="slide-content">
+                <h2>Bienvenido a IntelliTutor UNAM</h2>
             </div>
         </div>
-        <div class="carousel-buttons">
-            <div class="carousel-dot active" onclick="goToSlide(0)"></div>
-            <div class="carousel-dot" onclick="goToSlide(1)"></div>
-            <div class="carousel-dot" onclick="goToSlide(2)"></div>
+        <div class="carousel-slide slide-2">
+            <img src="{% static 'admin/img/carrusel_2_admin.webp' %}" alt="Aprende a tu Ritmo">
+            <div class="slide-content">
+                <h2>Aprende a tu Ritmo</h2>
+            </div>
+        </div>
+        <div class="carousel-slide slide-3">
+            <img src="{% static 'admin/img/carrusel_3_admin.webp' %}" alt="Alcanza tus Metas">
+            <div class="slide-content">
+                <h2>Alcanza tus Metas</h2>
+            </div>
         </div>
     </div>
+    <div class="carousel-buttons">
+        <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+        <div class="carousel-dot" onclick="goToSlide(1)"></div>
+        <div class="carousel-dot" onclick="goToSlide(2)"></div>
+    </div>
+</div>
 
     <!-- Welcome Section -->
     <div class="welcome-section">
@@ -287,120 +217,114 @@
     <!-- Bloque para JavaScript adicional -->
     {% block extra_js %}
     <script>
-        let currentSlide = 0;
-        const carousel = document.getElementById('carousel');
-        const dots = document.querySelectorAll('.carousel-dot');
-        const totalSlides = 3;
+        // Carrusel Automático - IntelliTutor UNAM
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const dots = document.querySelectorAll('.carousel-dot');
+const totalSlides = slides.length;
+let autoSlideInterval;
 
-        function goToSlide(index) {
-            currentSlide = index;
-            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentSlide);
-            });
+// Función para ir a un slide específico
+function goToSlide(index) {
+    // Asegurar que el índice esté en rango
+    if (index >= totalSlides) {
+        currentSlide = 0;
+    } else if (index < 0) {
+        currentSlide = totalSlides - 1;
+    } else {
+        currentSlide = index;
+    }
+    
+    // Mover el carrusel
+    const carousel = document.getElementById('carousel');
+    carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+    
+    // Actualizar dots
+    updateDots();
+    
+    // Reiniciar el intervalo automático
+    resetAutoSlide();
+}
+
+// Función para actualizar los dots activos
+function updateDots() {
+    dots.forEach((dot, index) => {
+        if (index === currentSlide) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
         }
+    });
+}
 
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            goToSlide(currentSlide);
-        }
+// Función para ir al siguiente slide
+function nextSlide() {
+    goToSlide(currentSlide + 1);
+}
 
-        // Auto-advance carousel every 4 seconds
-        setInterval(nextSlide, 4000);
+// Función para ir al slide anterior
+function prevSlide() {
+    goToSlide(currentSlide - 1);
+}
 
-        // Auto-dismiss messages after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const msgs = document.querySelectorAll('.messages-container .message');
-            if (msgs.length) {
-                setTimeout(() => {
-                    msgs.forEach(m => m.classList.add('hide'));
-                    setTimeout(() => msgs.forEach(m => m.remove()), 600);
-                }, 5000);
-            }
+// Función para iniciar el auto-slide
+function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+        nextSlide();
+    }, 5000); // Cambia cada 5 segundos
+}
+
+// Función para detener el auto-slide
+function stopAutoSlide() {
+    clearInterval(autoSlideInterval);
+}
+
+// Función para reiniciar el auto-slide
+function resetAutoSlide() {
+    stopAutoSlide();
+    startAutoSlide();
+}
+
+// Inicializar el carrusel cuando cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Asegurar que el primer slide esté activo
+    updateDots();
+    
+    // Iniciar auto-slide
+    startAutoSlide();
+    
+    // Agregar event listeners a los dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            goToSlide(index);
         });
+    });
+    
+    // Pausar auto-slide cuando el usuario pasa el mouse sobre el carrusel
+    const carouselContainer = document.querySelector('.carousel-container');
+    carouselContainer.addEventListener('mouseenter', stopAutoSlide);
+    carouselContainer.addEventListener('mouseleave', startAutoSlide);
+    
+    // Auto-ocultar mensajes después de 5 segundos
+    const messages = document.querySelectorAll('.message');
+    messages.forEach(message => {
+        setTimeout(() => {
+            message.classList.add('hide');
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 400); // Espera a que termine la animación
+        }, 5000);
+    });
+});
 
-        // Variable global para controlar el estado del dropdown
-        let profileDropdownActive = false;
-
-        // Función para alternar el dropdown
-        function toggleProfileDropdown(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            const profileDropdown = document.querySelector('.profile-dropdown');
-            
-            // Alternar estado
-            profileDropdownActive = !profileDropdownActive;
-            profileDropdown.classList.toggle('active');
-            
-            // Agregar o remover overlay
-            if (profileDropdownActive) {
-                const overlay = document.createElement('div');
-                overlay.className = 'dropdown-overlay';
-                overlay.id = 'dropdownOverlay';
-                overlay.addEventListener('click', closeProfileDropdown);
-                document.body.appendChild(overlay);
-                
-                setTimeout(() => {
-                    overlay.style.display = 'block';
-                }, 10);
-            } else {
-                closeProfileDropdown();
-            }
-        }
-
-        // Función para cerrar el dropdown
-        function closeProfileDropdown() {
-            const profileDropdown = document.querySelector('.profile-dropdown');
-            const overlay = document.getElementById('dropdownOverlay');
-            
-            profileDropdown.classList.remove('active');
-            profileDropdownActive = false;
-            
-            if (overlay) {
-                overlay.style.display = 'none';
-                setTimeout(() => {
-                    if (overlay.parentNode) {
-                        overlay.parentNode.removeChild(overlay);
-                    }
-                }, 300);
-            }
-        }
-
-        // Cerrar dropdown al hacer clic fuera
-        document.addEventListener('DOMContentLoaded', function() {
-            document.addEventListener('click', function(e) {
-                const profileDropdown = document.querySelector('.profile-dropdown');
-                const dropdownMenu = document.getElementById('profileDropdown');
-                const profileToggle = document.getElementById('profileToggle');
-                
-                if (profileDropdownActive && 
-                    !dropdownMenu.contains(e.target) && 
-                    !profileToggle.contains(e.target)) {
-                    closeProfileDropdown();
-                }
-            });
-            
-            // Cerrar al presionar ESC
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && profileDropdownActive) {
-                    closeProfileDropdown();
-                }
-            });
-            
-            // Efecto hover mejorado para items
-            const items = document.querySelectorAll('.dropdown-item.unam-item');
-            items.forEach(item => {
-                item.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateX(5px)';
-                });
-                
-                item.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateX(0)';
-                });
-            });
-        });
+// Opcional: Soporte para navegación con teclado
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+        prevSlide();
+    } else if (e.key === 'ArrowRight') {
+        nextSlide();
+    }
+});
     </script>
     {% endblock %}
 </body>

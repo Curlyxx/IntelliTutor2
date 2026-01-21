@@ -34,4 +34,5 @@ urlpatterns = [
     path('actualizar-perfil/', views.actualizar_perfil, name='actualizar_perfil'),
     path('cambiar-password/', views.cambiar_password, name='cambiar_password'),
     path('cerrar-sesion/', views.cerrar_sesion, name='cerrar_sesion'),
+    path('subir-avatar/', views.subir_avatar, name='subir_avatar'),
 ]
